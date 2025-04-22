@@ -58,6 +58,12 @@
     <Compile Include="FormPelanggan.Designer.cs">
       <DependentUpon>FormPelanggan.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPemesanan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPemesanan.Designer.cs">
+      <DependentUpon>FormPemesanan.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormProduk.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormPelanggan.resx">
       <DependentUpon>FormPelanggan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPemesanan.resx">
+      <DependentUpon>FormPemesanan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormProduk.resx">
       <DependentUpon>FormProduk.cs</DependentUpon>
