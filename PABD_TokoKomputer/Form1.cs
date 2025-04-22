@@ -13,7 +13,6 @@ namespace PABD_TokoKomputer
 {
     public partial class Form1: Form
     {
-        private string connectionString = "Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=OrganisasiMahasiswa;Integrated Security=True";
         public Form1()
         {
             InitializeComponent();
