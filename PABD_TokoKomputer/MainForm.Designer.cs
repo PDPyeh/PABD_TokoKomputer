@@ -33,6 +33,7 @@
             this.btnPemesanan = new System.Windows.Forms.Button();
             this.btnPembayaran = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.panelMain = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // btnPelanggan
@@ -85,11 +86,19 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Main Menu";
             // 
+            // panelMain
+            // 
+            this.panelMain.Location = new System.Drawing.Point(165, 23);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(628, 422);
+            this.panelMain.TabIndex = 5;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panelMain);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnPembayaran);
             this.Controls.Add(this.btnPemesanan);
@@ -109,5 +118,6 @@
         private System.Windows.Forms.Button btnPemesanan;
         private System.Windows.Forms.Button btnPembayaran;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panelMain;
     }
 }
