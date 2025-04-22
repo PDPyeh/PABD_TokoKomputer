@@ -49,7 +49,6 @@
             this.cbPemesanan.Name = "cbPemesanan";
             this.cbPemesanan.Size = new System.Drawing.Size(170, 21);
             this.cbPemesanan.TabIndex = 0;
-            this.cbPemesanan.SelectedIndexChanged += new System.EventHandler(this.cbPemesanan_SelectedIndexChanged);
             // 
             // cbStatusBayar
             // 

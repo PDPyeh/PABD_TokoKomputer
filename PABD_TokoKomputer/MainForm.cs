@@ -40,7 +40,12 @@ namespace PABD_TokoKomputer
 
         private void btnPemesanan_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new FormPemesanan());
+            FormPemesanan form = new FormPemesanan();
+            form.TopLevel = false;
+            panelMain.Controls.Clear();
+            panelMain.Controls.Add(form);
+            form.Dock = DockStyle.Fill;
+            form.Show();
         }
 
         private void btnPembayaran_Click(object sender, EventArgs e)

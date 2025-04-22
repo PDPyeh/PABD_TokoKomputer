@@ -30,7 +30,8 @@ namespace PABD_TokoKomputer
                 int count = (int)cmd.ExecuteScalar();
                 if (count > 0 && textBox1.Text == "admin") // hanya admin
                 {
-                    new MainForm().Show();
+                    MainForm main = new MainForm();
+                    main.Show();
                     this.Hide();
                 }
                 else
