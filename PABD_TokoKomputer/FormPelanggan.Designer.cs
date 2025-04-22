@@ -1,4 +1,6 @@
-﻿namespace PABD_TokoKomputer
+﻿using System;
+
+namespace PABD_TokoKomputer
 {
     partial class FormPelanggan
     {
@@ -92,7 +94,7 @@
             this.txtNama.Name = "txtNama";
             this.txtNama.Size = new System.Drawing.Size(305, 26);
             this.txtNama.TabIndex = 7;
-            this.txtNama.TextChanged += new System.EventHandler(this.txtNama_TextChanged);
+            this.txtNama.TextChanged += new System.EventHandler(this.txtNama_Text);
             // 
             // label1
             // 
@@ -164,6 +166,11 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void txtNama_Text(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
