@@ -90,14 +90,14 @@
             // 
             this.panelMain.Location = new System.Drawing.Point(165, 23);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(628, 422);
+            this.panelMain.Size = new System.Drawing.Size(858, 540);
             this.panelMain.TabIndex = 5;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1036, 574);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnPembayaran);

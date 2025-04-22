@@ -170,7 +170,7 @@ namespace PABD_TokoKomputer
 
         private void txtNama_Text(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+
         }
 
         #endregion
