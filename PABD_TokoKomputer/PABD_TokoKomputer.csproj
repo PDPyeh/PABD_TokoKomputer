@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +58,12 @@
     </Compile>
     <Compile Include="FormPelanggan.Designer.cs">
       <DependentUpon>FormPelanggan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPembayaran.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPembayaran.Designer.cs">
+      <DependentUpon>FormPembayaran.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPemesanan.cs">
       <SubType>Form</SubType>
