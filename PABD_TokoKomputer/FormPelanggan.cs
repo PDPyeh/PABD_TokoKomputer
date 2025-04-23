@@ -24,36 +24,58 @@ namespace PABD_TokoKomputer
         {
             if (txtNama.Text != "" && txtAlamat.Text != "" && txtNoTelepon.Text != "")
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO Pelanggan (Nama_Pelanggan, Alamat, NoTelepon) VALUES (@nama, @alamat, @no)", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
-                cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearInput();
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("INSERT INTO Pelanggan (Nama_Pelanggan, Alamat, NoTelepon) VALUES (@nama, @alamat, @no)", conn);
+                    cmd.Parameters.AddWithValue("@nama", txtNama.Text);
+                    cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
+                    cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                    MessageBox.Show("Data berhasil ditambahkan!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal menambah data: " + ex.Message);
+                }
             }
             else MessageBox.Show("Lengkapi semua input!");
         }
+
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (selectedPelangganId != -1)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan = @nama, Alamat = @alamat, NoTelepon = @no WHERE PelangganID = @id", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
-                cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
-                cmd.Parameters.AddWithValue("@id", selectedPelangganId);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearInput();
-                selectedPelangganId = -1;
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan = @nama, Alamat = @alamat, NoTelepon = @no WHERE PelangganID = @id", conn);
+                    cmd.Parameters.AddWithValue("@nama", txtNama.Text);
+                    cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
+                    cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
+                    cmd.Parameters.AddWithValue("@id", selectedPelangganId);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                    selectedPelangganId = -1;
+                    MessageBox.Show("Data berhasil diedit!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal mengedit data: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Pilih data yang ingin diedit terlebih dahulu.");
             }
         }
+
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
@@ -62,14 +84,22 @@ namespace PABD_TokoKomputer
                 var result = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("DELETE FROM Pelanggan WHERE PelangganID = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", selectedPelangganId);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    LoadData();
-                    ClearInput();
-                    selectedPelangganId = -1;
+                    try
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand("DELETE FROM Pelanggan WHERE PelangganID = @id", conn);
+                        cmd.Parameters.AddWithValue("@id", selectedPelangganId);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        LoadData();
+                        ClearInput();
+                        selectedPelangganId = -1;
+                        MessageBox.Show("Data berhasil dihapus!");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal menghapus data: " + ex.Message);
+                    }
                 }
             }
             else
@@ -77,6 +107,7 @@ namespace PABD_TokoKomputer
                 MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
             }
         }
+
 
         private void LoadData()
         {
