@@ -146,5 +146,18 @@ namespace PABD_TokoKomputer
             dtpTanggal.Value = DateTime.Now;
             selectedID = 0;
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FormPemesanan_Load(object sender, EventArgs e)
+        {
+            LoadData();
+
+            dataGridView1.CellClick += dataGridView1_CellClick;
+
+        }
     }
 }

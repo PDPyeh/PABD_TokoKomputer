@@ -126,6 +126,7 @@
             this.label1.Size = new System.Drawing.Size(407, 55);
             this.label1.TabIndex = 10;
             this.label1.Text = "Form Pemesanan";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // FormPemesanan
             // 
@@ -144,6 +145,7 @@
             this.Controls.Add(this.cbPelanggan);
             this.Name = "FormPemesanan";
             this.Text = "FormPemesanan";
+            this.Load += new System.EventHandler(this.FormPemesanan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
