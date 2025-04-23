@@ -13,23 +13,33 @@ namespace PABD_TokoKomputer
 {
     public partial class FormProduk : Form
     {
-        SqlConnection conn = new SqlConnection(Database.ConnectionString);
-        int selectedID = 0;
+        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        private int selectedID = 0;
 
         public FormProduk()
         {
             InitializeComponent();
-            LoadData();
         }
 
         private void LoadData()
         {
-            conn.Open();
             SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Produk", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
-            conn.Close();
+        }
+
+        private void ClearInput()
+        {
+            txtNamaProduk.Clear();
+            txtMerk.Clear();
+            txtKategori.Clear();
+            txtHarga.Clear();
+        }
+
+        private void txtNamaProduk_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void btnTambah_Click(object sender, EventArgs e)
@@ -50,83 +60,40 @@ namespace PABD_TokoKomputer
             else MessageBox.Show("Lengkapi semua input!");
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void FormProduk_Load(object sender, EventArgs e)
         {
-            if (selectedID == 0)
-            {
-                MessageBox.Show("Pilih data produk yang ingin diedit dulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtNamaProduk.Text) ||
-                string.IsNullOrWhiteSpace(txtMerk.Text) ||
-                string.IsNullOrWhiteSpace(txtKategori.Text) ||
-                string.IsNullOrWhiteSpace(txtHarga.Text))
-            {
-                MessageBox.Show("Semua field harus diisi!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            try
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga WHERE ProdukID=@id", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
-                cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
-                cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
-                cmd.Parameters.AddWithValue("@id", selectedID);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-
-                MessageBox.Show("Data produk berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                LoadData();
-                ClearInput();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal mengedit data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            LoadData();
+            dataGridView1.CellClick += dataGridView1_CellClick;
         }
-
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID == 0)
+            if (selectedID != 0)
             {
-                MessageBox.Show("Pilih data produk yang ingin dihapus dulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                var result = MessageBox.Show("Yakin ingin menghapus produk ini?", "Konfirmasi", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Produk WHERE ProdukID=@id", conn);
+                    cmd.Parameters.AddWithValue("@id", selectedID);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                    MessageBox.Show("Data produk berhasil dihapus!");
+                }
             }
-
-            var confirm = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm == DialogResult.No) return;
-
-            try
+            else
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM Produk WHERE ProdukID=@id", conn);
-                cmd.Parameters.AddWithValue("@id", selectedID);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-
-                MessageBox.Show("Data produk berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                LoadData();
-                ClearInput();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menghapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
             }
         }
-
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
                 selectedID = Convert.ToInt32(row.Cells["ProdukID"].Value);
                 txtNamaProduk.Text = row.Cells["NamaProduk"].Value.ToString();
                 txtMerk.Text = row.Cells["NamaMerk"].Value.ToString();
@@ -135,13 +102,34 @@ namespace PABD_TokoKomputer
             }
         }
 
-        private void ClearInput()
+        private void btnEdit_Click(object sender, EventArgs e)
         {
-            txtNamaProduk.Text = "";
-            txtMerk.Text = "";
-            txtKategori.Text = "";
-            txtHarga.Text = "";
-            selectedID = 0;
+            if (selectedID != 0)
+            {
+                if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "")
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga WHERE ProdukID=@id", conn);
+                    cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
+                    cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
+                    cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
+                    cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                    cmd.Parameters.AddWithValue("@id", selectedID);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                    MessageBox.Show("Data produk berhasil diubah!");
+                }
+                else
+                {
+                    MessageBox.Show("Lengkapi semua input untuk mengedit!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Pilih data yang ingin diedit terlebih dahulu.");
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace PABD_TokoKomputer
             this.btnTambah.Location = new System.Drawing.Point(455, 51);
             this.btnTambah.Name = "btnTambah";
             this.btnTambah.Size = new System.Drawing.Size(153, 49);
-            this.btnTambah.TabIndex = 0;
+            this.btnTambah.TabIndex = 13;
             this.btnTambah.Text = "Tambah";
             this.btnTambah.UseVisualStyleBackColor = true;
             // 

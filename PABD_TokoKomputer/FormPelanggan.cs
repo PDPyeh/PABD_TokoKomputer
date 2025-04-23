@@ -13,7 +13,7 @@ namespace PABD_TokoKomputer
 {
     public partial class FormPelanggan : Form
     {
-        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-E6D6ULI6\\EKORAMADHAN;Initial Catalog=SistemTokoComputerPABD_c10;Integrated Security=True");
+        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
         private int selectedPelangganId = -1;
         public FormPelanggan()
         {
