@@ -13,23 +13,11 @@ namespace PABD_TokoKomputer
 {
     public partial class FormPelanggan : Form
     {
-        SqlConnection conn = new SqlConnection(Database.ConnectionString);
-        int selectedID = 0;
-
+        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-E6D6ULI6\\EKORAMADHAN;Initial Catalog=SistemTokoComputerPABD_c10;Integrated Security=True");
+        private int selectedPelangganId = -1;
         public FormPelanggan()
         {
             InitializeComponent();
-            LoadData();
-        }
-
-        private void LoadData()
-        {
-            conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Pelanggan", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            dataGridView1.DataSource = dt;
-            conn.Close();
         }
 
         private void btnTambah_Click(object sender, EventArgs e)
@@ -51,33 +39,67 @@ namespace PABD_TokoKomputer
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedPelangganId != -1)
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan=@nama, Alamat=@alamat, NoTelepon=@no WHERE PelangganID=@id", conn);
+                SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan = @nama, Alamat = @alamat, NoTelepon = @no WHERE PelangganID = @id", conn);
                 cmd.Parameters.AddWithValue("@nama", txtNama.Text);
                 cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
                 cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
-                cmd.Parameters.AddWithValue("@id", selectedID);
+                cmd.Parameters.AddWithValue("@id", selectedPelangganId);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 LoadData();
                 ClearInput();
+                selectedPelangganId = -1;
             }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedPelangganId != -1)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM Pelanggan WHERE PelangganID=@id", conn);
-                cmd.Parameters.AddWithValue("@id", selectedID);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearInput();
+                var result = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Pelanggan WHERE PelangganID = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", selectedPelangganId);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                    selectedPelangganId = -1;
+                }
             }
+            else
+            {
+                MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
+            }
+        }
+
+        private void LoadData()
+        {
+            SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            dataGridView1.DataSource = dt;
+        }
+
+
+        private void ClearInput()
+        {
+            txtNama.Clear();
+            txtAlamat.Clear();
+            txtNoTelepon.Clear();
+        }
+
+        private void FormPelanggan_Load(object sender, EventArgs e)
+        {
+            LoadData();
+
+            // Hubungkan event CellClick ke fungsi handler
+            dataGridView1.CellClick += dataGridView1_CellClick;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -85,19 +107,13 @@ namespace PABD_TokoKomputer
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                selectedID = Convert.ToInt32(row.Cells["PelangganID"].Value);
+
+                // Gunakan nama kolom baru "ID"
+                selectedPelangganId = Convert.ToInt32(row.Cells["PelangganID"].Value);
                 txtNama.Text = row.Cells["Nama_Pelanggan"].Value.ToString();
                 txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
                 txtNoTelepon.Text = row.Cells["NoTelepon"].Value.ToString();
             }
-        }
-
-        private void ClearInput()
-        {
-            txtNama.Text = "";
-            txtAlamat.Text = "";
-            txtNoTelepon.Text = "";
-            selectedID = 0;
         }
     }
 }

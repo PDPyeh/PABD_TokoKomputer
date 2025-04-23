@@ -29,6 +29,10 @@ namespace PABD_TokoKomputer
         {
             conn.Open();
 
+            // Reset combobox sebelum assign datasource baru
+            cbPelanggan.DataSource = null;
+            cbProduk.DataSource = null;
+
             // Pelanggan
             SqlCommand cmd1 = new SqlCommand("SELECT PelangganID, Nama_Pelanggan FROM Pelanggan", conn);
             SqlDataReader rdr1 = cmd1.ExecuteReader();
@@ -38,6 +42,7 @@ namespace PABD_TokoKomputer
                 pelangganList.Add((int)rdr1["PelangganID"], rdr1["Nama_Pelanggan"].ToString());
             }
             rdr1.Close();
+
             cbPelanggan.DataSource = new BindingSource(pelangganList, null);
             cbPelanggan.DisplayMember = "Value";
             cbPelanggan.ValueMember = "Key";
@@ -51,12 +56,14 @@ namespace PABD_TokoKomputer
                 produkList.Add((int)rdr2["ProdukID"], rdr2["NamaProduk"].ToString());
             }
             rdr2.Close();
+
             cbProduk.DataSource = new BindingSource(produkList, null);
             cbProduk.DisplayMember = "Value";
             cbProduk.ValueMember = "Key";
 
             conn.Close();
         }
+
 
         private void LoadData()
         {
