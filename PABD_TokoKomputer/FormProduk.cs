@@ -52,7 +52,22 @@ namespace PABD_TokoKomputer
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedID == 0)
+            {
+                MessageBox.Show("Pilih data produk yang ingin diedit dulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNamaProduk.Text) ||
+                string.IsNullOrWhiteSpace(txtMerk.Text) ||
+                string.IsNullOrWhiteSpace(txtKategori.Text) ||
+                string.IsNullOrWhiteSpace(txtHarga.Text))
+            {
+                MessageBox.Show("Semua field harus diisi!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga WHERE ProdukID=@id", conn);
@@ -63,24 +78,49 @@ namespace PABD_TokoKomputer
                 cmd.Parameters.AddWithValue("@id", selectedID);
                 cmd.ExecuteNonQuery();
                 conn.Close();
+
+                MessageBox.Show("Data produk berhasil diubah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 LoadData();
                 ClearInput();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal mengedit data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedID == 0)
+            {
+                MessageBox.Show("Pilih data produk yang ingin dihapus dulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            try
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM Produk WHERE ProdukID=@id", conn);
                 cmd.Parameters.AddWithValue("@id", selectedID);
                 cmd.ExecuteNonQuery();
                 conn.Close();
+
+                MessageBox.Show("Data produk berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 LoadData();
                 ClearInput();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
