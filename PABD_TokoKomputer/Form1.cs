@@ -40,7 +40,7 @@ namespace PABD_TokoKomputer
                 }
                 else
                 {
-                    MessageBox.Show("Login hanya bisa dilakukan oleh admin.");
+                    MessageBox.Show("Username atau Password Salah! silahkan diulang");
                 }
             }
         }
