@@ -1,4 +1,4 @@
-﻿namespace PABD_TokoKomputer
+﻿namespace UCP1PABD
 {
     partial class FormPembayaran
     {
@@ -81,6 +81,7 @@
             this.btnTambah.TabIndex = 4;
             this.btnTambah.Text = "Tambah";
             this.btnTambah.UseVisualStyleBackColor = true;
+            this.btnTambah.Click += new System.EventHandler(this.btnTambah_Click);
             // 
             // btnHapus
             // 
@@ -90,6 +91,7 @@
             this.btnHapus.TabIndex = 5;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // btnEdit
             // 
@@ -99,6 +101,7 @@
             this.btnEdit.TabIndex = 6;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // label1
             // 

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PABD_TokoKomputer
+namespace UCP1PABD
 {
     public partial class FormPembayaran : Form
     {
@@ -18,7 +18,7 @@ namespace PABD_TokoKomputer
         public FormPembayaran()
         {
             InitializeComponent();
-            MessageBox.Show(cbStatusBayar == null ? "ComboBox NULL" : "ComboBox OK");
+
 
             LoadComboBox();
             LoadData();
@@ -54,6 +54,10 @@ namespace PABD_TokoKomputer
             cbStatusBayar.Items.Clear(); // bersihin dulu
             cbStatusBayar.Items.Add("Sukses");
             cbStatusBayar.Items.Add("Gagal");
+
+            dataGridView1.Dock = DockStyle.Fill;
+
+
 
         }
 
@@ -102,6 +106,7 @@ namespace PABD_TokoKomputer
                 ClearInput();
             }
         }
+
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

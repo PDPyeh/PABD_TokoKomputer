@@ -1,4 +1,4 @@
-﻿namespace PABD_TokoKomputer
+﻿namespace UCP1PABD
 {
     partial class FormPemesanan
     {
@@ -74,6 +74,7 @@
             this.btnEdit.TabIndex = 4;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // btnHapus
             // 
@@ -83,6 +84,7 @@
             this.btnHapus.TabIndex = 5;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;
+            this.btnHapus.Click += new System.EventHandler(this.btnHapus_Click);
             // 
             // cbProduk
             // 
