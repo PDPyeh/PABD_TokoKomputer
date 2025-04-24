@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PABD_TokoKomputer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,18 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PABD_TokoKomputer
 {
-    public partial class Form1: Form
+    public partial class Form1 : Form
     {
+        private string connectionString = "Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True";
         public Form1()
         {
             InitializeComponent();
         }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            using (SqlConnection conn = new SqlConnection(Database.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 string query = "SELECT COUNT(*) FROM Users WHERE Username=@user AND Password=@pass";
@@ -40,6 +44,5 @@ namespace PABD_TokoKomputer
                 }
             }
         }
-
     }
 }

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UCP1PABD
+namespace PABD_TokoKomputer
 {
     public partial class FormPemesanan : Form
     {
