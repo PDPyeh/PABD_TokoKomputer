@@ -39,13 +39,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // cbPemesanan
             // 
             this.cbPemesanan.FormattingEnabled = true;
-            this.cbPemesanan.Location = new System.Drawing.Point(12, 92);
+            this.cbPemesanan.Location = new System.Drawing.Point(12, 71);
             this.cbPemesanan.Name = "cbPemesanan";
             this.cbPemesanan.Size = new System.Drawing.Size(170, 21);
             this.cbPemesanan.TabIndex = 0;
@@ -55,7 +57,7 @@
             // cbStatusBayar
             // 
             this.cbStatusBayar.FormattingEnabled = true;
-            this.cbStatusBayar.Location = new System.Drawing.Point(188, 92);
+            this.cbStatusBayar.Location = new System.Drawing.Point(188, 71);
             this.cbStatusBayar.Name = "cbStatusBayar";
             this.cbStatusBayar.Size = new System.Drawing.Size(170, 21);
             this.cbStatusBayar.TabIndex = 1;
@@ -71,7 +73,7 @@
             // 
             // dtpTanggal
             // 
-            this.dtpTanggal.Location = new System.Drawing.Point(12, 151);
+            this.dtpTanggal.Location = new System.Drawing.Point(12, 169);
             this.dtpTanggal.Name = "dtpTanggal";
             this.dtpTanggal.Size = new System.Drawing.Size(346, 20);
             this.dtpTanggal.TabIndex = 3;
@@ -110,7 +112,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(7, 64);
+            this.label1.Location = new System.Drawing.Point(7, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(126, 25);
             this.label1.TabIndex = 7;
@@ -120,7 +122,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(183, 64);
+            this.label2.Location = new System.Drawing.Point(183, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(135, 25);
             this.label2.TabIndex = 8;
@@ -130,7 +132,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(6, 19);
+            this.label3.Location = new System.Drawing.Point(255, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(257, 33);
             this.label3.TabIndex = 9;
@@ -145,11 +147,33 @@
             this.dataGridView1.TabIndex = 10;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(7, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(208, 25);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Jumlah Pembayaran";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(8, 146);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(159, 20);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Tanggal Pembayaran";
+            // 
             // FormPembayaran
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -183,5 +207,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
