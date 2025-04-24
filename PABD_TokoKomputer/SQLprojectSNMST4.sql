@@ -7,7 +7,7 @@ CREATE TABLE Pelanggan (
     Nama_Pelanggan VARCHAR(100) NOT NULL,
     Alamat VARCHAR(255) NOT NULL,
     NoTelepon CHAR(15) NOT NULL,
-    CONSTRAINT chk_notelp CHECK (NoTelepon LIKE '08%' AND LEN(NoTelepon) <= 12) -- Tambahkan validasi prefix 08
+    CONSTRAINT chk_notelp CHECK (NoTelepon LIKE '08%' AND LEN(NoTelepon) <= 12) -- Tambahkan validasi "08"
 );
 
 CREATE TABLE Produk (
