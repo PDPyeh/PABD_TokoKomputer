@@ -1,4 +1,4 @@
-﻿namespace PABD_TokoKomputer
+﻿namespace UCP1PABD
 {
     partial class FormPemesanan
     {

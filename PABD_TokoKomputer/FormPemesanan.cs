@@ -9,12 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PABD_TokoKomputer
+namespace UCP1PABD
 {
     public partial class FormPemesanan : Form
     {
-        SqlConnection conn = new SqlConnection(Database.ConnectionString);
-        int selectedID = 0;
+        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        private int selectedID = 0;
+
 
         public FormPemesanan()
         {
@@ -24,14 +25,9 @@ namespace PABD_TokoKomputer
             cbStatus.Items.Add("Diproses");
             cbStatus.Items.Add("Dikirim");
         }
-
         private void LoadComboBoxData()
         {
             conn.Open();
-
-            // Reset combobox sebelum assign datasource baru
-            cbPelanggan.DataSource = null;
-            cbProduk.DataSource = null;
 
             // Pelanggan
             SqlCommand cmd1 = new SqlCommand("SELECT PelangganID, Nama_Pelanggan FROM Pelanggan", conn);
@@ -42,7 +38,6 @@ namespace PABD_TokoKomputer
                 pelangganList.Add((int)rdr1["PelangganID"], rdr1["Nama_Pelanggan"].ToString());
             }
             rdr1.Close();
-
             cbPelanggan.DataSource = new BindingSource(pelangganList, null);
             cbPelanggan.DisplayMember = "Value";
             cbPelanggan.ValueMember = "Key";
@@ -56,14 +51,12 @@ namespace PABD_TokoKomputer
                 produkList.Add((int)rdr2["ProdukID"], rdr2["NamaProduk"].ToString());
             }
             rdr2.Close();
-
             cbProduk.DataSource = new BindingSource(produkList, null);
             cbProduk.DisplayMember = "Value";
             cbProduk.ValueMember = "Key";
 
             conn.Close();
         }
-
 
         private void LoadData()
         {
@@ -73,6 +66,15 @@ namespace PABD_TokoKomputer
             da.Fill(dt);
             dataGridView1.DataSource = dt;
             conn.Close();
+        }
+        private void dtpTanggal_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbPelanggan_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void btnTambah_Click(object sender, EventArgs e)
@@ -123,6 +125,34 @@ namespace PABD_TokoKomputer
             }
         }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void FormPemesanan_Load(object sender, EventArgs e)
+        {
+            LoadData();
+
+            // Hubungkan event CellClick ke fungsi handler
+            dataGridView1.CellClick += dataGridView1_CellClick;
+        }
+
+        private void cbStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClearInput()
+        {
+            cbPelanggan.SelectedIndex = -1;
+            cbProduk.SelectedIndex = -1;
+            cbStatus.SelectedIndex = -1;
+            txtJumlah.Text = "";
+            dtpTanggal.Value = DateTime.Now;
+            selectedID = 0;
+        }
+
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -137,27 +167,12 @@ namespace PABD_TokoKomputer
             }
         }
 
-        private void ClearInput()
-        {
-            cbPelanggan.SelectedIndex = -1;
-            cbProduk.SelectedIndex = -1;
-            cbStatus.SelectedIndex = -1;
-            txtJumlah.Text = "";
-            dtpTanggal.Value = DateTime.Now;
-            selectedID = 0;
-        }
-
         private void label1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void FormPemesanan_Load(object sender, EventArgs e)
-        {
-            LoadData();
 
-            dataGridView1.CellClick += dataGridView1_CellClick;
 
-        }
     }
 }
