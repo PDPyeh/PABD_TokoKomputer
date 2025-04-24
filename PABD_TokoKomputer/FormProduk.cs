@@ -141,5 +141,11 @@ namespace UCP1PABD
         {
 
         }
+
+        private void FormProduk_Load_1(object sender, EventArgs e)
+        {
+            LoadData();
+            dataGridView1.CellClick += dataGridView1_CellClick;
+        }
     }
 }

@@ -120,5 +120,14 @@ namespace UCP1PABD
         {
 
         }
+
+        private void FormPelanggan_Load_1(object sender, EventArgs e)
+        {
+            LoadData();
+
+            // Hubungkan event CellClick ke fungsi handler
+            dataGridView1.CellClick += dataGridView1_CellClick;
+        
+    }
     }
 }

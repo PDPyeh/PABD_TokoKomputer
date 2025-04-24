@@ -49,6 +49,8 @@
             this.cbPemesanan.Name = "cbPemesanan";
             this.cbPemesanan.Size = new System.Drawing.Size(170, 21);
             this.cbPemesanan.TabIndex = 0;
+            this.cbPemesanan.SelectedIndexChanged += new System.EventHandler(this.cbPemesanan_SelectedIndexChanged);
+            this.cbPemesanan.SelectionChangeCommitted += new System.EventHandler(this.cbPemesanan_SelectionChangeCommitted);
             // 
             // cbStatusBayar
             // 
@@ -65,6 +67,7 @@
             this.txtJumlah.Name = "txtJumlah";
             this.txtJumlah.Size = new System.Drawing.Size(346, 26);
             this.txtJumlah.TabIndex = 2;
+            this.txtJumlah.TextChanged += new System.EventHandler(this.txtJumlah_TextChanged);
             // 
             // dtpTanggal
             // 
@@ -140,6 +143,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(776, 243);
             this.dataGridView1.TabIndex = 10;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
             // 
             // FormPembayaran
             // 
@@ -159,6 +163,7 @@
             this.Controls.Add(this.cbPemesanan);
             this.Name = "FormPembayaran";
             this.Text = "FormPembayaran";
+            this.Load += new System.EventHandler(this.FormPembayaran_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -120,5 +120,6 @@
         private System.Windows.Forms.Button btnPembayaran;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panelMain;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

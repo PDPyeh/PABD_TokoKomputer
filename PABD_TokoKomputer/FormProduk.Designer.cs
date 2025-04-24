@@ -184,6 +184,7 @@
             this.Controls.Add(this.btnHapus);
             this.Name = "FormProduk";
             this.Text = "FormProduk";
+            this.Load += new System.EventHandler(this.FormProduk_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

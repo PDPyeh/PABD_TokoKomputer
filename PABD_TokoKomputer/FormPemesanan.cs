@@ -90,10 +90,11 @@ namespace UCP1PABD
             conn.Close();
             LoadData();
             ClearInput();
+
             int jumlah;
             if (string.IsNullOrWhiteSpace(txtJumlah.Text) || !int.TryParse(txtJumlah.Text, out jumlah))
             {
-                MessageBox.Show("Jumlah harus diisi dengan angka!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Data berhasil di input!", "Input Sucsess", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             cmd.Parameters.AddWithValue("@jml", jumlah);

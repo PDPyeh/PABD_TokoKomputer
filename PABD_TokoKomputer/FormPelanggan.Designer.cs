@@ -165,6 +165,7 @@ namespace UCP1PABD
             this.Controls.Add(this.btnTambah);
             this.Name = "FormPelanggan";
             this.Text = "FormPelanggan";
+            this.Load += new System.EventHandler(this.FormPelanggan_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
