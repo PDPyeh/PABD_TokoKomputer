@@ -23,10 +23,12 @@ namespace UCP1PABD
 
         private void LoadData()
         {
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Produk", conn);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT ProdukID, NamaProduk, NamaMerk, KategoriProduk, Harga, Stok FROM Produk", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
+        
+
         }
 
         private void ClearInput()
@@ -35,6 +37,8 @@ namespace UCP1PABD
             txtMerk.Clear();
             txtKategori.Clear();
             txtHarga.Clear();
+            txtStok.Clear();
+
         }
 
         private void txtNamaProduk_TextChanged(object sender, EventArgs e)
@@ -44,14 +48,28 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
-            if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "")
+            if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "" && txtStok.Text != "")
             {
+
+                if (!IsHargaValid(txtHarga.Text))
+                {
+                    MessageBox.Show("Harga hanya boleh angka!");
+                    return;
+                }
+
+                if (!IsStokValid(txtStok.Text))
+                {
+                    MessageBox.Show("Stok harus berupa angka 0 atau lebih!");
+                    return;
+                }
+
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO Produk (NamaProduk, NamaMerk, KategoriProduk, Harga) VALUES (@nama, @merk, @kategori, @harga)", conn);
+                SqlCommand cmd = new SqlCommand("INSERT INTO Produk (NamaProduk, NamaMerk, KategoriProduk, Harga, Stok) VALUES (@nama, @merk, @kategori, @harga, @stok)", conn);
                 cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
                 cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
                 cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
                 cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 LoadData();
@@ -99,6 +117,8 @@ namespace UCP1PABD
                 txtMerk.Text = row.Cells["NamaMerk"].Value.ToString();
                 txtKategori.Text = row.Cells["KategoriProduk"].Value.ToString();
                 txtHarga.Text = row.Cells["Harga"].Value.ToString();
+                txtStok.Text = row.Cells["Stok"].Value.ToString();
+
             }
         }
 
@@ -106,10 +126,23 @@ namespace UCP1PABD
         {
             if (selectedID != 0)
             {
-                if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "")
+                if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "" && txtStok.Text != "")
                 {
+                    if (!IsHargaValid(txtHarga.Text))
+                    {
+                        MessageBox.Show("Harga hanya boleh angka!");
+                        return;
+                    }
+
+                    if (!IsStokValid(txtStok.Text))
+                    {
+                        MessageBox.Show("Stok harus berupa angka 0 atau lebih!");
+                        return;
+                    }
+
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga WHERE ProdukID=@id", conn);
+                    SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga, Stok=@stok WHERE ProdukID=@id", conn);
+                    cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
                     cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
                     cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
                     cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
@@ -147,5 +180,23 @@ namespace UCP1PABD
             LoadData();
             dataGridView1.CellClick += dataGridView1_CellClick;
         }
+
+
+        private bool IsHargaValid(string input)
+        {
+            return decimal.TryParse(input, out _);
+        }
+
+
+        private bool IsStokValid(string input)
+        {
+            return int.TryParse(input, out int stok) && stok >= 0;
+        }
+
+        private void txtStok_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
+
 }

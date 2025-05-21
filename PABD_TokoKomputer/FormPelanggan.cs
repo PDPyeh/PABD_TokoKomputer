@@ -24,6 +24,18 @@ namespace UCP1PABD
         {
             if (txtNama.Text != "" && txtAlamat.Text != "" && txtNoTelepon.Text != "")
             {
+                if (!IsNamaValid(txtNama.Text))
+                {
+                    MessageBox.Show("Nama tidak boleh mengandung angka!");
+                    return;
+                }
+
+                if (!IsNoTeleponValid(txtNoTelepon.Text))
+                {
+                    MessageBox.Show("No. Telepon hanya boleh angka!");
+                    return;
+                }
+
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("INSERT INTO Pelanggan (Nama_Pelanggan, Alamat, NoTelepon) VALUES (@nama, @alamat, @no)", conn);
                 cmd.Parameters.AddWithValue("@nama", txtNama.Text);
@@ -41,6 +53,18 @@ namespace UCP1PABD
         {
             if (selectedPelangganId != -1)
             {
+                if (!IsNamaValid(txtNama.Text))
+                {
+                    MessageBox.Show("Nama tidak boleh mengandung angka!");
+                    return;
+                }
+
+                if (!IsNoTeleponValid(txtNoTelepon.Text))
+                {
+                    MessageBox.Show("No. Telepon hanya boleh angka!");
+                    return;
+                }
+
                 conn.Open();
                 SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan = @nama, Alamat = @alamat, NoTelepon = @no WHERE PelangganID = @id", conn);
                 cmd.Parameters.AddWithValue("@nama", txtNama.Text);
@@ -128,6 +152,17 @@ namespace UCP1PABD
             // Hubungkan event CellClick ke fungsi handler
             dataGridView1.CellClick += dataGridView1_CellClick;
         
-    }
+        }
+
+        private bool IsNamaValid(string nama)
+        {
+            return !nama.Any(char.IsDigit); // true kalau tidak ada angka
+        }
+
+        private bool IsNoTeleponValid(string no)
+        {
+            return no.All(char.IsDigit); // true kalau semua karakter adalah angka
+        }
+
     }
 }

@@ -30,7 +30,6 @@
         {
             this.cbPemesanan = new System.Windows.Forms.ComboBox();
             this.cbStatusBayar = new System.Windows.Forms.ComboBox();
-            this.txtJumlah = new System.Windows.Forms.TextBox();
             this.dtpTanggal = new System.Windows.Forms.DateTimePicker();
             this.btnTambah = new System.Windows.Forms.Button();
             this.btnHapus = new System.Windows.Forms.Button();
@@ -41,6 +40,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.LblJumlah = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,15 +61,6 @@
             this.cbStatusBayar.Name = "cbStatusBayar";
             this.cbStatusBayar.Size = new System.Drawing.Size(170, 21);
             this.cbStatusBayar.TabIndex = 1;
-            // 
-            // txtJumlah
-            // 
-            this.txtJumlah.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtJumlah.Location = new System.Drawing.Point(12, 119);
-            this.txtJumlah.Name = "txtJumlah";
-            this.txtJumlah.Size = new System.Drawing.Size(346, 26);
-            this.txtJumlah.TabIndex = 2;
-            this.txtJumlah.TextChanged += new System.EventHandler(this.txtJumlah_TextChanged);
             // 
             // dtpTanggal
             // 
@@ -167,11 +158,23 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "Tanggal Pembayaran";
             // 
+            // LblJumlah
+            // 
+            this.LblJumlah.AutoSize = true;
+            this.LblJumlah.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblJumlah.Location = new System.Drawing.Point(7, 117);
+            this.LblJumlah.Name = "LblJumlah";
+            this.LblJumlah.Size = new System.Drawing.Size(63, 29);
+            this.LblJumlah.TabIndex = 13;
+            this.LblJumlah.Text = "Rp.0";
+            this.LblJumlah.Click += new System.EventHandler(this.label6_Click);
+            // 
             // FormPembayaran
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.LblJumlah);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dataGridView1);
@@ -182,7 +185,6 @@
             this.Controls.Add(this.btnHapus);
             this.Controls.Add(this.btnTambah);
             this.Controls.Add(this.dtpTanggal);
-            this.Controls.Add(this.txtJumlah);
             this.Controls.Add(this.cbStatusBayar);
             this.Controls.Add(this.cbPemesanan);
             this.Name = "FormPembayaran";
@@ -198,7 +200,6 @@
 
         private System.Windows.Forms.ComboBox cbPemesanan;
         private System.Windows.Forms.ComboBox cbStatusBayar;
-        private System.Windows.Forms.TextBox txtJumlah;
         private System.Windows.Forms.DateTimePicker dtpTanggal;
         private System.Windows.Forms.Button btnTambah;
         private System.Windows.Forms.Button btnHapus;
@@ -209,5 +210,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label LblJumlah;
     }
 }

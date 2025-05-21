@@ -106,7 +106,7 @@
             this.Controls.Add(this.btnProduk);
             this.Controls.Add(this.btnPelanggan);
             this.Name = "MainForm";
-            this.Text = "Form2";
+            this.Text = "Main Menu";
             this.ResumeLayout(false);
             this.PerformLayout();
 

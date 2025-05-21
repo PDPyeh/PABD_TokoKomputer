@@ -43,6 +43,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.LblStok = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,9 +58,11 @@
             // dtpTanggal
             // 
             this.dtpTanggal.Location = new System.Drawing.Point(18, 67);
+            this.dtpTanggal.MinDate = new System.DateTime(2025, 5, 21, 0, 0, 0, 0);
             this.dtpTanggal.Name = "dtpTanggal";
             this.dtpTanggal.Size = new System.Drawing.Size(292, 20);
             this.dtpTanggal.TabIndex = 1;
+            this.dtpTanggal.ValueChanged += new System.EventHandler(this.dtpTanggal_ValueChanged_1);
             // 
             // btnTambah
             // 
@@ -98,6 +101,7 @@
             this.cbProduk.Name = "cbProduk";
             this.cbProduk.Size = new System.Drawing.Size(143, 21);
             this.cbProduk.TabIndex = 6;
+            this.cbProduk.SelectedIndexChanged += new System.EventHandler(this.cbProduk_SelectedIndexChanged);
             // 
             // txtJumlah
             // 
@@ -180,11 +184,22 @@
             this.label6.TabIndex = 15;
             this.label6.Text = "Jumlah Pesanan";
             // 
+            // LblStok
+            // 
+            this.LblStok.AutoSize = true;
+            this.LblStok.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblStok.Location = new System.Drawing.Point(335, 120);
+            this.LblStok.Name = "LblStok";
+            this.LblStok.Size = new System.Drawing.Size(67, 20);
+            this.LblStok.TabIndex = 16;
+            this.LblStok.Text = "\"Stok: -\"";
+            // 
             // FormPemesanan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.LblStok);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -226,5 +241,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label LblStok;
     }
 }

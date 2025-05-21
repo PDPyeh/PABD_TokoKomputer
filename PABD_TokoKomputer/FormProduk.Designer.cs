@@ -41,6 +41,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label5 = new System.Windows.Forms.Label();
+            this.txtStok = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,7 +58,7 @@
             // 
             // btnTambah
             // 
-            this.btnTambah.Location = new System.Drawing.Point(545, 62);
+            this.btnTambah.Location = new System.Drawing.Point(545, 55);
             this.btnTambah.Name = "btnTambah";
             this.btnTambah.Size = new System.Drawing.Size(121, 51);
             this.btnTambah.TabIndex = 1;
@@ -66,7 +68,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(672, 62);
+            this.btnEdit.Location = new System.Drawing.Point(672, 55);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(116, 51);
             this.btnEdit.TabIndex = 2;
@@ -149,9 +151,9 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 194);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 228);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(776, 244);
+            this.dataGridView1.Size = new System.Drawing.Size(776, 210);
             this.dataGridView1.TabIndex = 11;
             // 
             // label5
@@ -164,11 +166,32 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "Form Produk";
             // 
+            // txtStok
+            // 
+            this.txtStok.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtStok.Location = new System.Drawing.Point(120, 185);
+            this.txtStok.Name = "txtStok";
+            this.txtStok.Size = new System.Drawing.Size(419, 26);
+            this.txtStok.TabIndex = 13;
+            this.txtStok.TextChanged += new System.EventHandler(this.txtStok_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(8, 185);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(42, 20);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Stok";
+            // 
             // FormProduk
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtStok);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label4);
@@ -206,5 +229,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtStok;
+        private System.Windows.Forms.Label label6;
     }
 }

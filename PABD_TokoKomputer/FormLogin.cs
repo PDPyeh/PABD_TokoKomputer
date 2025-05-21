@@ -13,10 +13,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PABD_TokoKomputer
 {
-    public partial class Form1 : Form
+    public partial class FormLogin : Form
     {
         private string connectionString = "Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True";
-        public Form1()
+        public FormLogin()
         {
             InitializeComponent();
         }

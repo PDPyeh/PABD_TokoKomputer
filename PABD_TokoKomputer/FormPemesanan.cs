@@ -15,6 +15,7 @@ namespace UCP1PABD
     {
         private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
         private int selectedID = 0;
+        private int stokSaatIni = 0;
 
 
         public FormPemesanan()
@@ -79,6 +80,23 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
+
+            int jumlahStok = int.Parse(txtJumlah.Text);
+            if (jumlahStok > stokSaatIni)
+            {
+                MessageBox.Show("Jumlah pemesanan melebihi stok yang tersedia!", "Stok Tidak Cukup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
+
+            if (!IsJumlahValid(txtJumlah.Text))
+            {
+                MessageBox.Show("Jumlah pemesanan harus angka dan lebih dari 0!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
             conn.Open();
             SqlCommand cmd = new SqlCommand("INSERT INTO Pemesanan (PelangganID, ProdukID, TanggalPemesanan, Status_Pesanan, Jumlah) VALUES (@pel, @prd, @tgl, @sts, @jml)", conn);
             cmd.Parameters.AddWithValue("@pel", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
@@ -103,6 +121,21 @@ namespace UCP1PABD
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            int jumlahStok = int.Parse(txtJumlah.Text);
+            if (jumlahStok > stokSaatIni)
+            {
+                MessageBox.Show("Jumlah pemesanan melebihi stok yang tersedia!", "Stok Tidak Cukup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
+            if (!IsJumlahValid(txtJumlah.Text))
+            {
+                MessageBox.Show("Jumlah pemesanan harus angka dan lebih dari 0!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
             if (selectedID != 0)
             {
                 conn.Open();
@@ -155,6 +188,8 @@ namespace UCP1PABD
 
             // Hubungkan event CellClick ke fungsi handler
             dataGridView1.CellClick += dataGridView1_CellClick;
+            dtpTanggal.MinDate = DateTime.Today;
+            dtpTanggal.MaxDate = new DateTime(DateTime.Today.Year, 12, 31);
         }
 
         private void cbStatus_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,5 +225,48 @@ namespace UCP1PABD
         {
 
         }
+
+        private void dtpTanggal_ValueChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private bool IsJumlahValid(string input)
+        {
+            if (int.TryParse(input, out int jumlah))
+            {
+                return jumlah > 0;
+            }
+            return false;
+        }
+
+        private void cbProduk_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbProduk.SelectedItem != null)
+            {
+                int produkID = ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key;
+
+                using (SqlConnection tempConn = new SqlConnection(conn.ConnectionString))
+                {
+                    tempConn.Open();
+                    using (SqlCommand cmd = new SqlCommand("SELECT Stok FROM Produk WHERE ProdukID = @id", tempConn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", produkID);
+                        object result = cmd.ExecuteScalar();
+
+                        if (result != null)
+                        {
+                            stokSaatIni = Convert.ToInt32(result);
+                            LblStok.Text = "Stok: " + stokSaatIni.ToString();
+                        }
+                    }
+                    tempConn.Close();
+                }
+            }
+        }
+
+
+
+
     }
 }

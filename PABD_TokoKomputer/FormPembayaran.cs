@@ -50,6 +50,8 @@ namespace UCP1PABD
             da.Fill(dt);
             dataGridView1.DataSource = dt;
             conn.Close();
+            dtpTanggal.MinDate = DateTime.Today;
+            dtpTanggal.MaxDate = new DateTime(DateTime.Today.Year, 12, 31);
         }
 
         private void FormPembayaran_Load(object sender, EventArgs e)
@@ -67,11 +69,20 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
+
+
+            string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+            if (!decimal.TryParse(nominalStr, out decimal nominalDecimal))
+            {
+                MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                return;
+            }
+
             conn.Open();
             SqlCommand cmd = new SqlCommand("INSERT INTO Pembayaran (PemesananID, TanggalPembayaran, JumlahPembayaran, StatusPembayaran) VALUES (@id, @tgl, @jml, @sts)", conn);
             cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
             cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-            cmd.Parameters.AddWithValue("@jml", decimal.Parse(txtJumlah.Text));
+            cmd.Parameters.AddWithValue("@jml", nominalDecimal);
             cmd.Parameters.AddWithValue("@sts", cbStatusBayar.Text);
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -87,7 +98,19 @@ namespace UCP1PABD
                 SqlCommand cmd = new SqlCommand("UPDATE Pembayaran SET PemesananID=@id, TanggalPembayaran=@tgl, JumlahPembayaran=@jml, StatusPembayaran=@sts WHERE PembayaranID=@payid", conn);
                 cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
                 cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-                cmd.Parameters.AddWithValue("@jml", decimal.Parse(txtJumlah.Text));
+
+                string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+                if (decimal.TryParse(nominalStr, out decimal nominalDecimal))
+                {
+                    cmd.Parameters.AddWithValue("@jml", nominalDecimal);
+                }
+                else
+                {
+                    conn.Close(); // ⛔ penting: tutup koneksi sebelum keluar
+                    MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                    return;
+                }
+
                 cmd.Parameters.AddWithValue("@sts", cbStatusBayar.Text);
                 cmd.Parameters.AddWithValue("@payid", selectedID);
                 cmd.ExecuteNonQuery();
@@ -120,7 +143,7 @@ namespace UCP1PABD
                 selectedID = Convert.ToInt32(row.Cells["PembayaranID"].Value);
                 cbPemesanan.Text = row.Cells["PemesananID"].Value.ToString();
                 dtpTanggal.Value = Convert.ToDateTime(row.Cells["TanggalPembayaran"].Value);
-                txtJumlah.Text = row.Cells["JumlahPembayaran"].Value.ToString();
+                LblJumlah.Text = row.Cells["JumlahPembayaran"].Value.ToString();
                 cbStatusBayar.Text = row.Cells["StatusPembayaran"].Value.ToString();
             }
 
@@ -130,7 +153,7 @@ namespace UCP1PABD
         {
             cbPemesanan.SelectedIndex = -1;
             cbStatusBayar.SelectedIndex = -1;
-            txtJumlah.Clear();
+            LblJumlah.Text = "Rp 0";
             dtpTanggal.Value = DateTime.Now;
             selectedID = 0;
         }
@@ -155,7 +178,8 @@ namespace UCP1PABD
                     int jumlah = Convert.ToInt32(reader["Jumlah"]);
                     decimal total = harga * jumlah;
 
-                    txtJumlah.Text = total.ToString("N0"); // format ribuan
+                    LblJumlah.Text = "Rp " + total.ToString("N0"); // tampilkan dengan format
+
                 }
 
                 reader.Close();
@@ -190,14 +214,21 @@ namespace UCP1PABD
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
                 selectedID = Convert.ToInt32(row.Cells["PembayaranID"].Value);
-                cbPemesanan.Text = row.Cells["PemesananID"].Value.ToString();
+                cbPemesanan.SelectedValue = Convert.ToInt32(row.Cells["PemesananID"].Value);
                 dtpTanggal.Value = Convert.ToDateTime(row.Cells["TanggalPembayaran"].Value);
-                txtJumlah.Text = row.Cells["JumlahPembayaran"].Value.ToString();
+                LblJumlah.Text = row.Cells["JumlahPembayaran"].Value.ToString();
                 cbStatusBayar.Text = row.Cells["StatusPembayaran"].Value.ToString();
+                decimal jumlah = Convert.ToDecimal(row.Cells["JumlahPembayaran"].Value);
+                LblJumlah.Text = "Rp " + jumlah.ToString("N2");
             }
         }
 
         private void cbPemesanan_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
         {
 
         }
