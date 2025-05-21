@@ -48,5 +48,17 @@ namespace PABD_TokoKomputer
         {
             LoadFormInPanel(new FormPembayaran());
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Yakin mau keluar?", "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.Hide(); // Sembunyikan form saat ini
+                FormLogin login = new FormLogin(); // Ganti dengan nama form login lo
+                login.Show(); // Tampilkan form login
+            }
+        }
     }
 }

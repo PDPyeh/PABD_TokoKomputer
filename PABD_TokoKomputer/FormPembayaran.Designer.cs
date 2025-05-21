@@ -71,7 +71,7 @@
             // 
             // btnTambah
             // 
-            this.btnTambah.Location = new System.Drawing.Point(376, 124);
+            this.btnTambah.Location = new System.Drawing.Point(381, 57);
             this.btnTambah.Name = "btnTambah";
             this.btnTambah.Size = new System.Drawing.Size(127, 47);
             this.btnTambah.TabIndex = 4;
@@ -81,7 +81,7 @@
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(661, 124);
+            this.btnHapus.Location = new System.Drawing.Point(647, 57);
             this.btnHapus.Name = "btnHapus";
             this.btnHapus.Size = new System.Drawing.Size(127, 47);
             this.btnHapus.TabIndex = 5;
@@ -91,7 +91,7 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(519, 124);
+            this.btnEdit.Location = new System.Drawing.Point(514, 57);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(127, 47);
             this.btnEdit.TabIndex = 6;
@@ -122,10 +122,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(255, 9);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(250, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(257, 33);
+            this.label3.Size = new System.Drawing.Size(305, 39);
             this.label3.TabIndex = 9;
             this.label3.Text = "Form Pembayaran";
             // 
@@ -173,6 +173,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.LblJumlah);
             this.Controls.Add(this.label5);

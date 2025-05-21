@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnPelanggan = new System.Windows.Forms.Button();
             this.btnProduk = new System.Windows.Forms.Button();
             this.btnPemesanan = new System.Windows.Forms.Button();
             this.btnPembayaran = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.btnLogout = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnPelanggan
             // 
-            this.btnPelanggan.Location = new System.Drawing.Point(3, 45);
+            this.btnPelanggan.Location = new System.Drawing.Point(12, 55);
             this.btnPelanggan.Name = "btnPelanggan";
             this.btnPelanggan.Size = new System.Drawing.Size(146, 47);
             this.btnPelanggan.TabIndex = 0;
@@ -48,7 +50,7 @@
             // 
             // btnProduk
             // 
-            this.btnProduk.Location = new System.Drawing.Point(3, 98);
+            this.btnProduk.Location = new System.Drawing.Point(12, 108);
             this.btnProduk.Name = "btnProduk";
             this.btnProduk.Size = new System.Drawing.Size(146, 47);
             this.btnProduk.TabIndex = 1;
@@ -58,7 +60,7 @@
             // 
             // btnPemesanan
             // 
-            this.btnPemesanan.Location = new System.Drawing.Point(3, 151);
+            this.btnPemesanan.Location = new System.Drawing.Point(12, 161);
             this.btnPemesanan.Name = "btnPemesanan";
             this.btnPemesanan.Size = new System.Drawing.Size(146, 47);
             this.btnPemesanan.TabIndex = 2;
@@ -68,7 +70,7 @@
             // 
             // btnPembayaran
             // 
-            this.btnPembayaran.Location = new System.Drawing.Point(3, 204);
+            this.btnPembayaran.Location = new System.Drawing.Point(12, 214);
             this.btnPembayaran.Name = "btnPembayaran";
             this.btnPembayaran.Size = new System.Drawing.Size(146, 47);
             this.btnPembayaran.TabIndex = 3;
@@ -80,7 +82,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("HelveticaNowText Bold", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(-5, -1);
+            this.label1.Location = new System.Drawing.Point(4, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(166, 43);
             this.label1.TabIndex = 4;
@@ -88,23 +90,37 @@
             // 
             // panelMain
             // 
-            this.panelMain.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelMain.Location = new System.Drawing.Point(177, 0);
+            this.panelMain.Location = new System.Drawing.Point(176, 9);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(859, 574);
+            this.panelMain.Size = new System.Drawing.Size(857, 553);
             this.panelMain.TabIndex = 5;
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.ForeColor = System.Drawing.Color.Red;
+            this.btnLogout.Location = new System.Drawing.Point(12, 515);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(146, 47);
+            this.btnLogout.TabIndex = 6;
+            this.btnLogout.Text = "Log out";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1036, 574);
+            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnPembayaran);
             this.Controls.Add(this.btnPemesanan);
             this.Controls.Add(this.btnProduk);
             this.Controls.Add(this.btnPelanggan);
+            this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.Text = "Main Menu";
             this.ResumeLayout(false);
@@ -121,5 +137,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button btnLogout;
     }
 }
