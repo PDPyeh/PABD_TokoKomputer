@@ -8,15 +8,21 @@ namespace PABD_TokoKomputer
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static bool IsLoggedIn = false;
+        public static string Username = "";
+
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormLogin());
+
+            Application.Run(new FormLogin()); // Mulai dari login
+            if (IsLoggedIn)
+            {
+                Application.Run(new MainForm()); // Kalau berhasil login, baru ke MainForm
+            }
         }
     }
+
 }

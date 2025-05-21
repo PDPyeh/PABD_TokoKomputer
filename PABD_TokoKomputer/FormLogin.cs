@@ -34,9 +34,9 @@ namespace PABD_TokoKomputer
                 int count = (int)cmd.ExecuteScalar();
                 if (count > 0 && textBox1.Text == "admin") // hanya admin
                 {
-                    MainForm main = new MainForm();
-                    main.Show();
-                    this.Hide();
+                    Program.IsLoggedIn = true;
+                    Program.Username = textBox1.Text;
+                    this.Close(); // kembali ke Program.cs dan buka MainForm
                 }
                 else
                 {

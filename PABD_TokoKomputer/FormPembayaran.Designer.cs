@@ -81,9 +81,9 @@
             // 
             // btnHapus
             // 
-            this.btnHapus.Location = new System.Drawing.Point(647, 57);
+            this.btnHapus.Location = new System.Drawing.Point(381, 112);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(127, 47);
+            this.btnHapus.Size = new System.Drawing.Size(260, 47);
             this.btnHapus.TabIndex = 5;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;

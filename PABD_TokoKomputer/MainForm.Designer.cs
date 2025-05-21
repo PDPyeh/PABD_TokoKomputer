@@ -90,6 +90,7 @@
             // 
             // panelMain
             // 
+            this.panelMain.BackColor = System.Drawing.Color.LightBlue;
             this.panelMain.Location = new System.Drawing.Point(176, 9);
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(857, 553);
@@ -123,6 +124,7 @@
             this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.Text = "Main Menu";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

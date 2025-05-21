@@ -60,5 +60,11 @@ namespace PABD_TokoKomputer
                 login.Show(); // Tampilkan form login
             }
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            MessageBox.Show("Selamat datang, " + Program.Username + "!", "Welcome", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
+    
 }
