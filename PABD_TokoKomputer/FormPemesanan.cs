@@ -81,6 +81,12 @@ namespace UCP1PABD
         private void btnTambah_Click(object sender, EventArgs e)
         {
 
+            if (!IsJumlahValid(txtJumlah.Text))
+            {
+                MessageBox.Show("Jumlah pemesanan harus angka dan lebih dari 0!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             int jumlahStok = int.Parse(txtJumlah.Text);
             if (jumlahStok > stokSaatIni)
             {
@@ -88,46 +94,44 @@ namespace UCP1PABD
                 return;
             }
 
-
-
-            if (!IsJumlahValid(txtJumlah.Text))
-            {
-                MessageBox.Show("Jumlah pemesanan harus angka dan lebih dari 0!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-
             conn.Open();
-            SqlCommand cmd = new SqlCommand("TambahPemesanan", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@PelangganID", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
-            cmd.Parameters.AddWithValue("@ProdukID", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
-            cmd.Parameters.AddWithValue("@Jumlah", int.Parse(txtJumlah.Text));
-            cmd.Parameters.AddWithValue("@Status_Pesanan", cbStatus.Text);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-            LoadData();
-            ClearInput();
+            SqlTransaction transaction = conn.BeginTransaction();
 
-            int jumlah;
-            if (string.IsNullOrWhiteSpace(txtJumlah.Text) || !int.TryParse(txtJumlah.Text, out jumlah))
+            try
             {
-                MessageBox.Show("Data berhasil di input!", "Input Sucsess", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                SqlCommand cmd = new SqlCommand("TambahPemesanan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PelangganID", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
+                cmd.Parameters.AddWithValue("@ProdukID", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
+                cmd.Parameters.AddWithValue("@Jumlah", jumlahStok);
+                cmd.Parameters.AddWithValue("@Status_Pesanan", cbStatus.Text);
+
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+
+                MessageBox.Show("Pemesanan berhasil ditambah!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadData();
+                ClearInput();
             }
-            cmd.Parameters.AddWithValue("@jml", jumlah);
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal tambah pemesanan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
+            }
 
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            int jumlahStok = int.Parse(txtJumlah.Text);
-            if (jumlahStok > stokSaatIni)
+            if (selectedID == 0)
             {
-                MessageBox.Show("Jumlah pemesanan melebihi stok yang tersedia!", "Stok Tidak Cukup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Pilih data pemesanan yang ingin diedit!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
 
             if (!IsJumlahValid(txtJumlah.Text))
             {
@@ -135,45 +139,82 @@ namespace UCP1PABD
                 return;
             }
 
-
-            if (selectedID != 0)
+            int jumlahStok = int.Parse(txtJumlah.Text);
+            if (jumlahStok > stokSaatIni)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UpdatePemesanan", conn);
-                cmd.Parameters.AddWithValue("@pel", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
-                cmd.Parameters.AddWithValue("@prd", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
-                cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-                cmd.Parameters.AddWithValue("@sts", cbStatus.Text);
-                cmd.Parameters.AddWithValue("@jml", int.Parse(txtJumlah.Text));
-                cmd.Parameters.AddWithValue("@id", selectedID);
+                MessageBox.Show("Jumlah pemesanan melebihi stok yang tersedia!", "Stok Tidak Cukup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("UpdatePemesanan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PemesananID", selectedID);
+                cmd.Parameters.AddWithValue("@PelangganID", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
+                cmd.Parameters.AddWithValue("@ProdukID", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
+                cmd.Parameters.AddWithValue("@Jumlah", jumlahStok);
+                cmd.Parameters.AddWithValue("@Status_Pesanan", cbStatus.Text);
+
                 cmd.ExecuteNonQuery();
-                conn.Close();
+                transaction.Commit();
+
+                MessageBox.Show("Pemesanan berhasil diupdate!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 ClearInput();
-                int jumlah;
-                if (string.IsNullOrWhiteSpace(txtJumlah.Text) || !int.TryParse(txtJumlah.Text, out jumlah))
-                {
-                    MessageBox.Show("Jumlah harus diisi dengan angka!", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                cmd.Parameters.AddWithValue("@jml", jumlah);
-
+            }
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal update pemesanan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedID == 0)
             {
-                conn.Open();
+                MessageBox.Show("Pilih data pemesanan yang ingin dihapus!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                SqlCommand cmd = new SqlCommand("HapusPemesanan", conn);
-                cmd.Parameters.AddWithValue("@id", selectedID);
+            var konfirmasi = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (konfirmasi != DialogResult.Yes)
+                return;
+
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("HapusPemesanan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PemesananID", selectedID);
+
                 cmd.ExecuteNonQuery();
-                conn.Close();
+                transaction.Commit();
+
+                MessageBox.Show("Pemesanan berhasil dihapus!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 ClearInput();
+            }
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal hapus pemesanan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
