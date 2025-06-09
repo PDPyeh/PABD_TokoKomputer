@@ -98,12 +98,12 @@ namespace UCP1PABD
 
 
             conn.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO Pemesanan (PelangganID, ProdukID, TanggalPemesanan, Status_Pesanan, Jumlah) VALUES (@pel, @prd, @tgl, @sts, @jml)", conn);
-            cmd.Parameters.AddWithValue("@pel", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
-            cmd.Parameters.AddWithValue("@prd", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
-            cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-            cmd.Parameters.AddWithValue("@sts", cbStatus.Text);
-            cmd.Parameters.AddWithValue("@jml", int.Parse(txtJumlah.Text));
+            SqlCommand cmd = new SqlCommand("TambahPemesanan", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@PelangganID", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
+            cmd.Parameters.AddWithValue("@ProdukID", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
+            cmd.Parameters.AddWithValue("@Jumlah", int.Parse(txtJumlah.Text));
+            cmd.Parameters.AddWithValue("@Status_Pesanan", cbStatus.Text);
             cmd.ExecuteNonQuery();
             conn.Close();
             LoadData();
@@ -139,7 +139,7 @@ namespace UCP1PABD
             if (selectedID != 0)
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Pemesanan SET PelangganID=@pel, ProdukID=@prd, TanggalPemesanan=@tgl, Status_Pesanan=@sts, Jumlah=@jml WHERE PemesananID=@id", conn);
+                SqlCommand cmd = new SqlCommand("UpdatePemesanan", conn);
                 cmd.Parameters.AddWithValue("@pel", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
                 cmd.Parameters.AddWithValue("@prd", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
                 cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
@@ -168,7 +168,7 @@ namespace UCP1PABD
             {
                 conn.Open();
 
-                SqlCommand cmd = new SqlCommand("DELETE FROM Pemesanan WHERE PemesananID=@id", conn);
+                SqlCommand cmd = new SqlCommand("HapusPemesanan", conn);
                 cmd.Parameters.AddWithValue("@id", selectedID);
                 cmd.ExecuteNonQuery();
                 conn.Close();
