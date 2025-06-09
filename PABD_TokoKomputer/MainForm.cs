@@ -65,6 +65,11 @@ namespace PABD_TokoKomputer
         {
             MessageBox.Show("Selamat datang, " + Program.Username + "!", "Welcome", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        private void btn_pemasukan_Click(object sender, EventArgs e)
+        {
+            LoadFormInPanel(new reportpemasukan());
+        }
     }
     
 }

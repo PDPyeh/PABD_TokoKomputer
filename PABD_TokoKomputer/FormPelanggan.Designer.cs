@@ -68,7 +68,7 @@ namespace UCP1PABD
             // 
             this.btnHapus.Location = new System.Drawing.Point(455, 106);
             this.btnHapus.Name = "btnHapus";
-            this.btnHapus.Size = new System.Drawing.Size(324, 49);
+            this.btnHapus.Size = new System.Drawing.Size(153, 49);
             this.btnHapus.TabIndex = 2;
             this.btnHapus.Text = "Hapus";
             this.btnHapus.UseVisualStyleBackColor = true;

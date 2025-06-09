@@ -8,11 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Caching;
 
 namespace UCP1PABD
 {
     public partial class FormProduk : Form
     {
+
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly string _cacheKey = "PelangganData";
+        private readonly CacheItemPolicy _cachePolicy = new CacheItemPolicy
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
+        };
         private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
         private int selectedID = 0;
 
@@ -74,8 +82,10 @@ namespace UCP1PABD
                     cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
                     cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
                     cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
+
                     cmd.ExecuteNonQuery();
                     transaction.Commit();
+                    _cache.Remove(_cacheKey);
 
                     MessageBox.Show("Data produk berhasil ditambahkan!");
                     LoadData();
@@ -118,8 +128,10 @@ namespace UCP1PABD
                         SqlCommand cmd = new SqlCommand("sp_DeleteProduk", conn, transaction);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@id", selectedID);
+
                         cmd.ExecuteNonQuery();
                         transaction.Commit();
+                        _cache.Remove(_cacheKey);
 
                         MessageBox.Show("Data produk berhasil dihapus!");
                         LoadData();
@@ -189,8 +201,10 @@ namespace UCP1PABD
                         cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
                         cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
                         cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
+
                         cmd.ExecuteNonQuery();
                         transaction.Commit();
+                        _cache.Remove(_cacheKey);
 
                         MessageBox.Show("Data produk berhasil diubah!");
                         LoadData();

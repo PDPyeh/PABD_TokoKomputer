@@ -7,18 +7,36 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
+using System.Runtime.Caching;
+
 
 namespace UCP1PABD
 {
     public partial class FormPelanggan : Form
     {
+
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly string _cacheKey = "PelangganData";
+        private readonly CacheItemPolicy _cachePolicy = new CacheItemPolicy
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
+        };
+
         private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
         private int selectedPelangganId = -1;
         public FormPelanggan()
         {
             InitializeComponent();
+            dataGridView1.CellClick += dataGridView1_CellClick;
+
         }
+
+
+
+       
+
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
@@ -58,6 +76,7 @@ namespace UCP1PABD
 
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
+                _cache.Remove(_cacheKey);
 
                 MessageBox.Show("Data pelanggan berhasil ditambahkan.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
@@ -109,6 +128,7 @@ namespace UCP1PABD
 
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
+                _cache.Remove(_cacheKey);
 
                 MessageBox.Show("Data pelanggan berhasil diupdate.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
@@ -150,6 +170,7 @@ namespace UCP1PABD
 
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
+                _cache.Remove(_cacheKey);
 
                 MessageBox.Show("Data pelanggan berhasil dihapus.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
@@ -169,9 +190,20 @@ namespace UCP1PABD
 
         private void LoadData()
         {
-            SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+            DataTable dt;
+
+            if (_cache.Contains(_cacheKey))
+            {
+                dt = (DataTable)_cache.Get(_cacheKey); // Ambil dari cache
+            }
+            else
+            {
+                dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", conn);
+                da.Fill(dt);
+                _cache.Add(_cacheKey, dt, _cachePolicy); // Simpan ke cache
+            }
+
             dataGridView1.DataSource = dt;
         }
 

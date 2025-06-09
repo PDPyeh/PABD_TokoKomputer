@@ -8,11 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Caching;
 
 namespace UCP1PABD
 {
     public partial class FormPembayaran : Form
     {
+
+        private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly string _cacheKey = "PelangganData";
+        private readonly CacheItemPolicy _cachePolicy = new CacheItemPolicy
+        {
+            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
+        };
         private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
         int selectedID = 0;
         public FormPembayaran()
@@ -22,6 +30,7 @@ namespace UCP1PABD
             cbStatusBayar.Items.Add("Sukses");
             cbStatusBayar.Items.Add("Gagal");
 
+            
             LoadComboBox();
             LoadData();
         }
@@ -90,8 +99,8 @@ namespace UCP1PABD
                 cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
 
                 cmd.ExecuteNonQuery();
-
                 transaction.Commit();
+                _cache.Remove(_cacheKey);
                 MessageBox.Show("Data pembayaran berhasil ditambahkan.");
             }
             catch (Exception ex)
@@ -132,7 +141,7 @@ namespace UCP1PABD
                 cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
 
                 cmd.ExecuteNonQuery();
-
+                _cache.Remove(_cacheKey);
                 transaction.Commit();
                 MessageBox.Show("Data pembayaran berhasil diupdate.");
             }
@@ -162,7 +171,7 @@ namespace UCP1PABD
                 cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
 
                 cmd.ExecuteNonQuery();
-
+                _cache.Remove(_cacheKey);
                 transaction.Commit();
                 MessageBox.Show("Data pembayaran berhasil dihapus.");
             }
@@ -273,6 +282,11 @@ namespace UCP1PABD
         }
 
         private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpTanggal_ValueChanged(object sender, EventArgs e)
         {
 
         }

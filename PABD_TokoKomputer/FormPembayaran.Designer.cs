@@ -68,6 +68,7 @@
             this.dtpTanggal.Name = "dtpTanggal";
             this.dtpTanggal.Size = new System.Drawing.Size(346, 20);
             this.dtpTanggal.TabIndex = 3;
+            this.dtpTanggal.ValueChanged += new System.EventHandler(this.dtpTanggal_ValueChanged);
             // 
             // btnTambah
             // 

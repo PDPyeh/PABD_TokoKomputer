@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataSetPemasukan" targetNamespace="http://tempuri.org/DataSetPemasukan.xsd" xmlns:mstns="http://tempuri.org/DataSetPemasukan.xsd" xmlns="http://tempuri.org/DataSetPemasukan.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="SistemTokoComputerPABD_1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="SistemTokoComputerPABD_1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.PABD_TokoKomputer.Properties.Settings.GlobalReference.Default.SistemTokoComputerPABD_1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="DataTable1TableAdapter" GeneratorDataComponentClassName="DataTable1TableAdapter" Name="DataTable1" UserDataComponentName="DataTable1TableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="SistemTokoComputerPABD_1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        Pembayaran.PembayaranID, Pelanggan.Nama_Pelanggan, Produk.NamaProduk, Pemesanan.TanggalPemesanan, Pembayaran.TanggalPembayaran, Pemesanan.Jumlah, Pembayaran.JumlahPembayaran, 
+                         Pembayaran.StatusPembayaran
+FROM            Pembayaran INNER JOIN
+                         Pemesanan ON Pembayaran.PemesananID = Pemesanan.PemesananID INNER JOIN
+                         Produk ON Pemesanan.ProdukID = Produk.ProdukID INNER JOIN
+                         Pelanggan ON Pemesanan.PelangganID = Pelanggan.PelangganID</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="PembayaranID" DataSetColumn="PembayaranID" />
+              <Mapping SourceColumn="Nama_Pelanggan" DataSetColumn="Nama_Pelanggan" />
+              <Mapping SourceColumn="NamaProduk" DataSetColumn="NamaProduk" />
+              <Mapping SourceColumn="TanggalPemesanan" DataSetColumn="TanggalPemesanan" />
+              <Mapping SourceColumn="TanggalPembayaran" DataSetColumn="TanggalPembayaran" />
+              <Mapping SourceColumn="Jumlah" DataSetColumn="Jumlah" />
+              <Mapping SourceColumn="JumlahPembayaran" DataSetColumn="JumlahPembayaran" />
+              <Mapping SourceColumn="StatusPembayaran" DataSetColumn="StatusPembayaran" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DataSetPemasukan" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="DataSetPemasukan" msprop:Generator_DataSetName="DataSetPemasukan">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_RowClassName="DataTable1Row" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_UserTableName="DataTable1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PembayaranID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnPropNameInRow="PembayaranID" msprop:Generator_ColumnPropNameInTable="PembayaranIDColumn" msprop:Generator_ColumnVarNameInTable="columnPembayaranID" msprop:Generator_UserColumnName="PembayaranID" type="xs:int" />
+              <xs:element name="Nama_Pelanggan" msprop:Generator_ColumnPropNameInRow="Nama_Pelanggan" msprop:Generator_ColumnPropNameInTable="Nama_PelangganColumn" msprop:Generator_ColumnVarNameInTable="columnNama_Pelanggan" msprop:Generator_UserColumnName="Nama_Pelanggan">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NamaProduk" msprop:Generator_ColumnPropNameInRow="NamaProduk" msprop:Generator_ColumnPropNameInTable="NamaProdukColumn" msprop:Generator_ColumnVarNameInTable="columnNamaProduk" msprop:Generator_UserColumnName="NamaProduk">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TanggalPemesanan" msprop:Generator_ColumnPropNameInRow="TanggalPemesanan" msprop:Generator_ColumnPropNameInTable="TanggalPemesananColumn" msprop:Generator_ColumnVarNameInTable="columnTanggalPemesanan" msprop:Generator_UserColumnName="TanggalPemesanan" type="xs:dateTime" />
+              <xs:element name="TanggalPembayaran" msprop:Generator_ColumnPropNameInRow="TanggalPembayaran" msprop:Generator_ColumnPropNameInTable="TanggalPembayaranColumn" msprop:Generator_ColumnVarNameInTable="columnTanggalPembayaran" msprop:Generator_UserColumnName="TanggalPembayaran" type="xs:dateTime" />
+              <xs:element name="Jumlah" msprop:Generator_ColumnPropNameInRow="Jumlah" msprop:Generator_ColumnPropNameInTable="JumlahColumn" msprop:Generator_ColumnVarNameInTable="columnJumlah" msprop:Generator_UserColumnName="Jumlah" type="xs:int" />
+              <xs:element name="JumlahPembayaran" msprop:Generator_ColumnPropNameInRow="JumlahPembayaran" msprop:Generator_ColumnPropNameInTable="JumlahPembayaranColumn" msprop:Generator_ColumnVarNameInTable="columnJumlahPembayaran" msprop:Generator_UserColumnName="JumlahPembayaran" type="xs:decimal" />
+              <xs:element name="StatusPembayaran" msprop:Generator_ColumnPropNameInRow="StatusPembayaran" msprop:Generator_ColumnPropNameInTable="StatusPembayaranColumn" msprop:Generator_ColumnVarNameInTable="columnStatusPembayaran" msprop:Generator_UserColumnName="StatusPembayaran">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:DataTable1" />
+      <xs:field xpath="mstns:PembayaranID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

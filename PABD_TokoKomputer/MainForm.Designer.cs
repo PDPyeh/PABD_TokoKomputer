@@ -36,6 +36,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.btn_pemasukan = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnPelanggan
@@ -107,6 +108,16 @@
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
+            // btn_pemasukan
+            // 
+            this.btn_pemasukan.Location = new System.Drawing.Point(13, 268);
+            this.btn_pemasukan.Name = "btn_pemasukan";
+            this.btn_pemasukan.Size = new System.Drawing.Size(145, 48);
+            this.btn_pemasukan.TabIndex = 7;
+            this.btn_pemasukan.Text = "laporan pemasukan";
+            this.btn_pemasukan.UseVisualStyleBackColor = true;
+            this.btn_pemasukan.Click += new System.EventHandler(this.btn_pemasukan_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -114,6 +125,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1036, 574);
+            this.Controls.Add(this.btn_pemasukan);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.label1);
@@ -140,5 +152,6 @@
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btn_pemasukan;
     }
 }
