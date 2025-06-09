@@ -69,51 +69,79 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
-
-
-            string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
-            if (!decimal.TryParse(nominalStr, out decimal nominalDecimal))
+            try
             {
-                MessageBox.Show("Format jumlah pembayaran tidak valid!");
-                return;
-            }
-
-            conn.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO Pembayaran (PemesananID, TanggalPembayaran, JumlahPembayaran, StatusPembayaran) VALUES (@id, @tgl, @jml, @sts)", conn);
-            cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
-            cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-            cmd.Parameters.AddWithValue("@jml", nominalDecimal);
-            cmd.Parameters.AddWithValue("@sts", cbStatusBayar.Text);
-            cmd.ExecuteNonQuery();
-            conn.Close();
-            LoadData();
-            ClearInput();
-        }
-
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            if (selectedID != 0)
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Pembayaran SET PemesananID=@id, TanggalPembayaran=@tgl, JumlahPembayaran=@jml, StatusPembayaran=@sts WHERE PembayaranID=@payid", conn);
-                cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
-                cmd.Parameters.AddWithValue("@tgl", dtpTanggal.Value);
-
+                decimal nominalDecimal;
                 string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
-                if (decimal.TryParse(nominalStr, out decimal nominalDecimal))
+                if (!decimal.TryParse(nominalStr, out nominalDecimal))
                 {
-                    cmd.Parameters.AddWithValue("@jml", nominalDecimal);
-                }
-                else
-                {
-                    conn.Close(); // ⛔ penting: tutup koneksi sebelum keluar
                     MessageBox.Show("Format jumlah pembayaran tidak valid!");
                     return;
                 }
 
-                cmd.Parameters.AddWithValue("@sts", cbStatusBayar.Text);
-                cmd.Parameters.AddWithValue("@payid", selectedID);
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                SqlCommand cmd = new SqlCommand("sp_InsertPembayaran", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
+                cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
+                cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
+                cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
+
                 cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+                MessageBox.Show("Data pembayaran berhasil ditambahkan.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal tambah data: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+                LoadData();
+                ClearInput();
+            }
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (selectedID == 0) return;
+
+            try
+            {
+                decimal nominalDecimal;
+                string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+                if (!decimal.TryParse(nominalStr, out nominalDecimal))
+                {
+                    MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                    return;
+                }
+
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                SqlCommand cmd = new SqlCommand("sp_UpdatePembayaran", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
+                cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
+                cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
+                cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
+                cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
+
+                cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+                MessageBox.Show("Data pembayaran berhasil diupdate.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal update data: " + ex.Message);
+            }
+            finally
+            {
                 conn.Close();
                 LoadData();
                 ClearInput();
@@ -122,12 +150,28 @@ namespace UCP1PABD
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID != 0)
+            if (selectedID == 0) return;
+
+            try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM Pembayaran WHERE PembayaranID=@id", conn);
-                cmd.Parameters.AddWithValue("@id", selectedID);
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                SqlCommand cmd = new SqlCommand("sp_DeletePembayaran", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
+
                 cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+                MessageBox.Show("Data pembayaran berhasil dihapus.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal hapus data: " + ex.Message);
+            }
+            finally
+            {
                 conn.Close();
                 LoadData();
                 ClearInput();
