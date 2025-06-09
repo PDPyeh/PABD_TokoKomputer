@@ -22,83 +22,148 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
-            if (txtNama.Text != "" && txtAlamat.Text != "" && txtNoTelepon.Text != "")
+            // Validasi input harus lengkap
+            if (txtNama.Text == "" || txtAlamat.Text == "" || txtNoTelepon.Text == "")
             {
-                if (!IsNamaValid(txtNama.Text))
-                {
-                    MessageBox.Show("Nama tidak boleh mengandung angka!");
-                    return;
-                }
+                MessageBox.Show("Lengkapi semua input!");
+                return;
+            }
 
-                if (!IsNoTeleponValid(txtNoTelepon.Text))
-                {
-                    MessageBox.Show("No. Telepon hanya boleh angka!");
-                    return;
-                }
+            // Validasi nama dan no telepon
+            if (!IsNamaValid(txtNama.Text))
+            {
+                MessageBox.Show("Nama tidak boleh mengandung angka!");
+                return;
+            }
 
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO Pelanggan (Nama_Pelanggan, Alamat, NoTelepon) VALUES (@nama, @alamat, @no)", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
-                cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
+            if (!IsNoTeleponValid(txtNoTelepon.Text))
+            {
+                MessageBox.Show("No. Telepon hanya boleh angka!");
+                return;
+            }
+
+            conn.Open();
+            // Mulai transaction di sisi client
+            SqlTransaction transaction = conn.BeginTransaction();
+
+            try
+            {
+                SqlCommand cmd = new SqlCommand("sp_InsertPelanggan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Set parameter sesuai stored procedure
+                cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);   
+                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
+
                 cmd.ExecuteNonQuery();
-                conn.Close();
+                transaction.Commit();
+
+                MessageBox.Show("Data pelanggan berhasil ditambahkan.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 ClearInput();
             }
-            else MessageBox.Show("Lengkapi semua input!");
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal tambah pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (selectedPelangganId != -1)
+            if (selectedPelangganId == -1)
             {
-                if (!IsNamaValid(txtNama.Text))
-                {
-                    MessageBox.Show("Nama tidak boleh mengandung angka!");
-                    return;
-                }
+                MessageBox.Show("Pilih data pelanggan yang akan diubah.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                if (!IsNoTeleponValid(txtNoTelepon.Text))
-                {
-                    MessageBox.Show("No. Telepon hanya boleh angka!");
-                    return;
-                }
+            // Validasi input
+            if (!IsNamaValid(txtNama.Text))
+            {
+                MessageBox.Show("Nama tidak boleh mengandung angka!");
+                return;
+            }
 
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE Pelanggan SET Nama_Pelanggan = @nama, Alamat = @alamat, NoTelepon = @no WHERE PelangganID = @id", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNama.Text);
-                cmd.Parameters.AddWithValue("@alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@no", txtNoTelepon.Text);
-                cmd.Parameters.AddWithValue("@id", selectedPelangganId);
+            if (!IsNoTeleponValid(txtNoTelepon.Text))
+            {
+                MessageBox.Show("No. Telepon hanya boleh angka!");
+                return;
+            }
+
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("sp_UpdatePelanggan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
+                cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);
+                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
+
                 cmd.ExecuteNonQuery();
-                conn.Close();
+                transaction.Commit();
+
+                MessageBox.Show("Data pelanggan berhasil diupdate.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 ClearInput();
                 selectedPelangganId = -1;
+            }
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal update pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedPelangganId != -1)
+            if (selectedPelangganId == -1)
             {
-                var result = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("DELETE FROM Pelanggan WHERE PelangganID = @id", conn);
-                    cmd.Parameters.AddWithValue("@id", selectedPelangganId);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    LoadData();
-                    ClearInput();
-                    selectedPelangganId = -1;
-                }
+                MessageBox.Show("Pilih data pelanggan yang akan dihapus.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else
+
+            var result = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo);
+            if (result != DialogResult.Yes)
+                return;
+
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
+            try
             {
-                MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
+                SqlCommand cmd = new SqlCommand("sp_DeletePelanggan", conn, transaction);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
+
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+
+                MessageBox.Show("Data pelanggan berhasil dihapus.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadData();
+                ClearInput();
+                selectedPelangganId = -1;
+            }
+            catch (SqlException ex)
+            {
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal hapus pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 
