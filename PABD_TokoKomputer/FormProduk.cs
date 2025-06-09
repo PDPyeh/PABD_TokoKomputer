@@ -50,7 +50,6 @@ namespace UCP1PABD
         {
             if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "" && txtStok.Text != "")
             {
-
                 if (!IsHargaValid(txtHarga.Text))
                 {
                     MessageBox.Show("Harga hanya boleh angka!");
@@ -64,18 +63,38 @@ namespace UCP1PABD
                 }
 
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO Produk (NamaProduk, NamaMerk, KategoriProduk, Harga, Stok) VALUES (@nama, @merk, @kategori, @harga, @stok)", conn);
-                cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
-                cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
-                cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
-                cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                LoadData();
-                ClearInput();
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("sp_InsertProduk", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
+                    cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
+                    cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
+                    cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                    cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
+                    MessageBox.Show("Data produk berhasil ditambahkan!");
+                    LoadData();
+                    ClearInput();
+                }
+                catch (SqlException ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal tambah produk: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
-            else MessageBox.Show("Lengkapi semua input!");
+            else
+            {
+                MessageBox.Show("Lengkapi semua input!");
+            }
         }
 
         private void FormProduk_Load(object sender, EventArgs e)
@@ -92,13 +111,30 @@ namespace UCP1PABD
                 if (result == DialogResult.Yes)
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("DELETE FROM Produk WHERE ProdukID=@id", conn);
-                    cmd.Parameters.AddWithValue("@id", selectedID);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    LoadData();
-                    ClearInput();
-                    MessageBox.Show("Data produk berhasil dihapus!");
+                    SqlTransaction transaction = conn.BeginTransaction();
+
+                    try
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_DeleteProduk", conn, transaction);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", selectedID);
+                        cmd.ExecuteNonQuery();
+                        transaction.Commit();
+
+                        MessageBox.Show("Data produk berhasil dihapus!");
+                        LoadData();
+                        ClearInput();
+                        selectedID = 0;
+                    }
+                    catch (SqlException ex)
+                    {
+                        try { transaction.Rollback(); } catch { }
+                        MessageBox.Show("Gagal hapus produk: " + ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
                 }
             }
             else
@@ -141,18 +177,34 @@ namespace UCP1PABD
                     }
 
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("UPDATE Produk SET NamaProduk=@nama, NamaMerk=@merk, KategoriProduk=@kategori, Harga=@harga, Stok=@stok WHERE ProdukID=@id", conn);
-                    cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
-                    cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
-                    cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
-                    cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                    cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
-                    cmd.Parameters.AddWithValue("@id", selectedID);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    LoadData();
-                    ClearInput();
-                    MessageBox.Show("Data produk berhasil diubah!");
+                    SqlTransaction transaction = conn.BeginTransaction();
+
+                    try
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_UpdateProduk", conn, transaction);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", selectedID);
+                        cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
+                        cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
+                        cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
+                        cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                        cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
+                        cmd.ExecuteNonQuery();
+                        transaction.Commit();
+
+                        MessageBox.Show("Data produk berhasil diubah!");
+                        LoadData();
+                        ClearInput();
+                    }
+                    catch (SqlException ex)
+                    {
+                        try { transaction.Rollback(); } catch { }
+                        MessageBox.Show("Gagal ubah produk: " + ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
                 }
                 else
                 {
