@@ -35,6 +35,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.btnExit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button2
@@ -90,6 +91,18 @@
             this.label6.TabIndex = 7;
             this.label6.Text = "Password";
             // 
+            // btnExit
+            // 
+            this.btnExit.BackColor = System.Drawing.Color.Red;
+            this.btnExit.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnExit.Location = new System.Drawing.Point(677, 410);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(111, 28);
+            this.btnExit.TabIndex = 8;
+            this.btnExit.Text = "Exit";
+            this.btnExit.UseVisualStyleBackColor = false;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -98,6 +111,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnExit);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -121,6 +135,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button btnExit;
     }
 }
 

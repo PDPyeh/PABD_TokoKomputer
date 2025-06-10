@@ -44,5 +44,15 @@ namespace PABD_TokoKomputer
                 }
             }
         }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Yakin mau keluar?", "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
     }
 }

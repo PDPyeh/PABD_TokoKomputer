@@ -110,11 +110,11 @@
             // 
             // btn_pemasukan
             // 
-            this.btn_pemasukan.Location = new System.Drawing.Point(13, 268);
+            this.btn_pemasukan.Location = new System.Drawing.Point(12, 267);
             this.btn_pemasukan.Name = "btn_pemasukan";
             this.btn_pemasukan.Size = new System.Drawing.Size(145, 48);
             this.btn_pemasukan.TabIndex = 7;
-            this.btn_pemasukan.Text = "laporan pemasukan";
+            this.btn_pemasukan.Text = "Laporan Pemasukan";
             this.btn_pemasukan.UseVisualStyleBackColor = true;
             this.btn_pemasukan.Click += new System.EventHandler(this.btn_pemasukan_Click);
             // 
