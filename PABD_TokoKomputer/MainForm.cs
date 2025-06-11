@@ -19,7 +19,7 @@ namespace PABD_TokoKomputer
     public partial class MainForm : Form
     {
 
-        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        
         public MainForm()
         {
             InitializeComponent();

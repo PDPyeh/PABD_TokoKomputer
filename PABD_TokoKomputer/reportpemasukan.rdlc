@@ -78,19 +78,19 @@
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>1.83854cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>1.83854cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>0.78021cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>3.63771cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>1.81208cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -107,7 +107,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!Nama_Pelanggan.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -137,7 +139,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!NamaProduk.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -167,7 +171,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!TanggalPemesanan.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -197,7 +203,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!TanggalPembayaran.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -227,7 +235,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Sum(Fields!Jumlah.Value)</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -257,7 +267,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>= "Rp. " &amp; Format(Fields!JumlahPembayaran.Value, "#0.00")</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -287,7 +299,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!StatusPembayaran.Value</Value>
-                              <Style />
+                              <Style>
+                                <FontSize>8pt</FontSize>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -560,7 +574,7 @@
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
-                <Size>2.5cm</Size>
+                <Size>0.64792cm</Size>
                 <CellContents>
                   <Textbox Name="Textbox2">
                     <CanGrow>true</CanGrow>
@@ -570,7 +584,9 @@
                         <TextRuns>
                           <TextRun>
                             <Value>=RowNumber(nothing)</Value>
-                            <Style />
+                            <Style>
+                              <FontSize>8pt</FontSize>
+                            </Style>
                           </TextRun>
                         </TextRuns>
                         <Style />
@@ -593,7 +609,7 @@
               <TablixMembers>
                 <TablixMember>
                   <TablixHeader>
-                    <Size>2.5cm</Size>
+                    <Size>0.93896cm</Size>
                     <CellContents>
                       <Textbox Name="PembayaranID">
                         <CanGrow>true</CanGrow>
@@ -603,7 +619,9 @@
                             <TextRuns>
                               <TextRun>
                                 <Value>=Fields!PembayaranID.Value</Value>
-                                <Style />
+                                <Style>
+                                  <FontSize>8pt</FontSize>
+                                </Style>
                               </TextRun>
                             </TextRuns>
                             <Style />
@@ -629,10 +647,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSetPemasukan</DataSetName>
-        <Top>1.6637cm</Top>
-        <Left>1.24354cm</Left>
+        <Top>0.28787cm</Top>
+        <Left>0.47625cm</Left>
         <Height>1.2cm</Height>
-        <Width>23.63771cm</Width>
+        <Width>16.49396cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
