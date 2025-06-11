@@ -88,6 +88,14 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
+            int produkID = ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key;
+
+            SqlCommand cmdStok = new SqlCommand("SELECT Stok FROM Produk WHERE ProdukID = @ProdukID", conn);
+            cmdStok.Parameters.AddWithValue("@ProdukID", produkID);
+
+            conn.Open();
+            int stokSaatIni = (int)cmdStok.ExecuteScalar();
+            conn.Close();
 
             if (!IsJumlahValid(txtJumlah.Text))
             {
@@ -100,6 +108,13 @@ namespace UCP1PABD
             {
                 MessageBox.Show("Jumlah pemesanan melebihi stok yang tersedia!", "Stok Tidak Cukup", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+
+            if (jumlahStok == stokSaatIni)
+            {
+                var result = MessageBox.Show("Stok akan habis setelah pemesanan ini. Lanjutkan?", "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.No)
+                    return;
             }
 
             conn.Open();

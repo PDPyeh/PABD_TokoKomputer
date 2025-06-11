@@ -78,6 +78,9 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
             try
             {
                 decimal nominalDecimal;
@@ -88,8 +91,6 @@ namespace UCP1PABD
                     return;
                 }
 
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
 
                 SqlCommand cmd = new SqlCommand("sp_InsertPembayaran", conn, transaction);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -105,6 +106,7 @@ namespace UCP1PABD
             }
             catch (Exception ex)
             {
+                try { transaction.Rollback(); } catch { }
                 MessageBox.Show("Gagal tambah data: " + ex.Message);
             }
             finally
@@ -119,6 +121,9 @@ namespace UCP1PABD
         {
             if (selectedID == 0) return;
 
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
             try
             {
                 decimal nominalDecimal;
@@ -129,8 +134,7 @@ namespace UCP1PABD
                     return;
                 }
 
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
+                
 
                 SqlCommand cmd = new SqlCommand("sp_UpdatePembayaran", conn, transaction);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -147,6 +151,7 @@ namespace UCP1PABD
             }
             catch (Exception ex)
             {
+                try { transaction.Rollback(); } catch { }
                 MessageBox.Show("Gagal update data: " + ex.Message);
             }
             finally
@@ -161,10 +166,11 @@ namespace UCP1PABD
         {
             if (selectedID == 0) return;
 
+            conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
+
             try
             {
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
 
                 SqlCommand cmd = new SqlCommand("sp_DeletePembayaran", conn, transaction);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -177,7 +183,8 @@ namespace UCP1PABD
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal hapus data: " + ex.Message);
+                try { transaction.Rollback(); } catch { }
+                MessageBox.Show("Gagal hapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
