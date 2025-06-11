@@ -303,7 +303,8 @@ namespace UCP1PABD
 
             // Hubungkan event CellClick ke fungsi handler
             dataGridView1.CellClick += dataGridView1_CellClick;
-        
+            EnsureIndexes();
+
         }
 
         private bool IsNamaValid(string nama)
