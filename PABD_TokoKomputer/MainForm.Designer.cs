@@ -100,7 +100,7 @@
             // btnLogout
             // 
             this.btnLogout.ForeColor = System.Drawing.Color.Red;
-            this.btnLogout.Location = new System.Drawing.Point(12, 515);
+            this.btnLogout.Location = new System.Drawing.Point(878, 568);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(146, 47);
             this.btnLogout.TabIndex = 6;
@@ -124,7 +124,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1036, 574);
+            this.ClientSize = new System.Drawing.Size(1036, 622);
             this.Controls.Add(this.btn_pemasukan);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.panelMain);

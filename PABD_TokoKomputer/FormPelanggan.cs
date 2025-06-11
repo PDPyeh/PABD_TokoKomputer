@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.Caching;
-
+using OfficeOpenXml;
+using System.IO;
 
 namespace UCP1PABD
 {
@@ -33,9 +34,62 @@ namespace UCP1PABD
 
         }
 
+        private void EnsureIndexes()
+        {
+            conn.Open();
+
+            string indexScript = @"
+                    -- Pelanggan
+                    IF OBJECT_ID('dbo.Pelanggan', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pelanggan_Nama' AND object_id = OBJECT_ID('dbo.Pelanggan'))
+                            CREATE NONCLUSTERED INDEX idx_Pelanggan_Nama ON dbo.Pelanggan(Nama_Pelanggan);
+
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pelanggan_NoTelepon' AND object_id = OBJECT_ID('dbo.Pelanggan'))
+                            CREATE NONCLUSTERED INDEX idx_Pelanggan_NoTelepon ON dbo.Pelanggan(NoTelepon);
+                    END
+
+                    -- Produk
+                    IF OBJECT_ID('dbo.Produk', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Produk_NamaProduk' AND object_id = OBJECT_ID('dbo.Produk'))
+                            CREATE NONCLUSTERED INDEX idx_Produk_NamaProduk ON dbo.Produk(NamaProduk);
+
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Produk_Kategori' AND object_id = OBJECT_ID('dbo.Produk'))
+                            CREATE NONCLUSTERED INDEX idx_Produk_Kategori ON dbo.Produk(KategoriProduk);
+                    END
+
+                    -- Pemesanan
+                    IF OBJECT_ID('dbo.Pemesanan', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pemesanan_Tanggal' AND object_id = OBJECT_ID('dbo.Pemesanan'))
+                            CREATE NONCLUSTERED INDEX idx_Pemesanan_Tanggal ON dbo.Pemesanan(TanggalPemesanan);
+
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pemesanan_Status' AND object_id = OBJECT_ID('dbo.Pemesanan'))
+                            CREATE NONCLUSTERED INDEX idx_Pemesanan_Status ON dbo.Pemesanan(Status_Pesanan);
+                    END
+
+                    -- Pembayaran
+                    IF OBJECT_ID('dbo.Pembayaran', 'U') IS NOT NULL
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pembayaran_Tanggal' AND object_id = OBJECT_ID('dbo.Pembayaran'))
+                            CREATE NONCLUSTERED INDEX idx_Pembayaran_Tanggal ON dbo.Pembayaran(TanggalPembayaran);
+
+                        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_Pembayaran_Status' AND object_id = OBJECT_ID('dbo.Pembayaran'))
+                            CREATE NONCLUSTERED INDEX idx_Pembayaran_Status ON dbo.Pembayaran(StatusPembayaran);
+                    END
+                    ";
+
+            using (var cmd = new SqlCommand(indexScript, conn))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
+        }
 
 
-       
+
 
 
         private void btnTambah_Click(object sender, EventArgs e)
@@ -221,6 +275,7 @@ namespace UCP1PABD
 
             // Hubungkan event CellClick ke fungsi handler
             dataGridView1.CellClick += dataGridView1_CellClick;
+            EnsureIndexes();
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -261,5 +316,6 @@ namespace UCP1PABD
             return no.All(char.IsDigit); // true kalau semua karakter adalah angka
         }
 
+        
     }
 }
