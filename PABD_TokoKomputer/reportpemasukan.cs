@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace PABD_TokoKomputer
 {
     public partial class reportpemasukan: Form
     {
+        koneksi kn = new koneksi();
+        string connect = "";
         public reportpemasukan()
         {
             InitializeComponent();
@@ -30,8 +33,7 @@ namespace PABD_TokoKomputer
         private void SetupReportViewer()
         {
             // Connection string to your database
-            string connectionString = "Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;" + "Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True";
-
+            connect = kn.connectionString();
             // SQL query to retrieve the required data from the database
             string query = @"
                 SELECT        
@@ -48,7 +50,7 @@ namespace PABD_TokoKomputer
             DataTable dt = new DataTable();
 
             // Use SqlDataAdapter to fill the DataTable with data from the database
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
                 SqlDataAdapter da = new SqlDataAdapter(query, conn);
 
@@ -63,7 +65,9 @@ namespace PABD_TokoKomputer
 
             // Set the path to the report (.rdlc file)
             // Change this to the actual path of your RDLC file
-            reportViewer1.LocalReport.ReportPath = @"D:\PABD_RDLCREPORT\reportpemasukan.rdlc";
+            //reportViewer1.LocalReport.ReportPath = @"D:\PABD_RDLCREPORT\reportpemasukan.rdlc";
+            string reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reportpemasukan.rdlc");
+            reportViewer1.LocalReport.ReportPath = reportPath;
             // Refresh the ReportViewer to show the updated report
             reportViewer1.RefreshReport();
         }

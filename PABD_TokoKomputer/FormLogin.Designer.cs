@@ -36,6 +36,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnExit = new System.Windows.Forms.Button();
+            this.lblStatusKoneksi = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button2
@@ -103,6 +104,14 @@
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // lblStatusKoneksi
+            // 
+            this.lblStatusKoneksi.AutoSize = true;
+            this.lblStatusKoneksi.Location = new System.Drawing.Point(40, 426);
+            this.lblStatusKoneksi.Name = "lblStatusKoneksi";
+            this.lblStatusKoneksi.Size = new System.Drawing.Size(0, 13);
+            this.lblStatusKoneksi.TabIndex = 9;
+            // 
             // FormLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -111,6 +120,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblStatusKoneksi);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -122,6 +132,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormLogin";
             this.Text = "FormLogin";
+            this.Load += new System.EventHandler(this.FormLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,6 +147,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Label lblStatusKoneksi;
     }
 }
 

@@ -56,5 +56,26 @@ namespace PABD_TokoKomputer
                 this.Close();
             }
         }
+
+        private void FormLogin_Load(object sender, EventArgs e)
+        {
+            lblStatusKoneksi.Text = "Menguji koneksi ke database...";
+            lblStatusKoneksi.ForeColor = Color.Gray;
+
+            using (SqlConnection conn = new SqlConnection(strkonek))
+            {
+                try
+                {
+                    conn.Open();
+                    lblStatusKoneksi.Text = "Koneksi database BERHASIL.";
+                    lblStatusKoneksi.ForeColor = Color.Green;
+                }
+                catch (Exception ex)
+                {
+                    lblStatusKoneksi.Text = "Koneksi database GAGAL!";
+                    lblStatusKoneksi.ForeColor = Color.Red;
+                }
+            }
+        }
     }
 }
