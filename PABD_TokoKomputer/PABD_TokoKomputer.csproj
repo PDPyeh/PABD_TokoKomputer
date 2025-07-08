@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="koneksi.cs" />
     <Compile Include="DataSetPemasukan.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

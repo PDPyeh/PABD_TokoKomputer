@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Runtime.Caching;
 using OfficeOpenXml;
 using System.IO;
+using PABD_TokoKomputer;
 
 namespace UCP1PABD
 {
@@ -25,7 +26,8 @@ namespace UCP1PABD
             AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
         };
 
-        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        koneksi kn = new koneksi();
+
         private int selectedPelangganId = -1;
         public FormPelanggan()
         {
@@ -36,9 +38,11 @@ namespace UCP1PABD
 
         private void EnsureIndexes()
         {
-            conn.Open();
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
 
-            string indexScript = @"
+                string indexScript = @"
                     -- Pelanggan
                     IF OBJECT_ID('dbo.Pelanggan', 'U') IS NOT NULL
                     BEGIN
@@ -80,12 +84,13 @@ namespace UCP1PABD
                     END
                     ";
 
-            using (var cmd = new SqlCommand(indexScript, conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
+                using (var cmd = new SqlCommand(indexScript, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
 
-            conn.Close();
+                conn.Close();
+            }
         }
 
 
@@ -113,37 +118,39 @@ namespace UCP1PABD
                 MessageBox.Show("No. Telepon hanya boleh angka!");
                 return;
             }
-
-            conn.Open();
-            // Mulai transaction di sisi client
-            SqlTransaction transaction = conn.BeginTransaction();
-
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                SqlCommand cmd = new SqlCommand("sp_InsertPelanggan", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+                // Mulai transaction di sisi client
+                SqlTransaction transaction = conn.BeginTransaction();
 
-                // Set parameter sesuai stored procedure
-                cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);   
-                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("sp_InsertPelanggan", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.ExecuteNonQuery();
-                transaction.Commit();
-                _cache.Remove(_cacheKey);
+                    // Set parameter sesuai stored procedure
+                    cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);
+                    cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                    cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
 
-                MessageBox.Show("Data pelanggan berhasil ditambahkan.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadData();
-                ClearInput();
-            }
-            catch (SqlException ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal tambah pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    _cache.Remove(_cacheKey);
+
+                    MessageBox.Show("Data pelanggan berhasil ditambahkan.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadData();
+                    ClearInput();
+                }
+                catch (SqlException ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal tambah pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
         }
 
@@ -167,36 +174,38 @@ namespace UCP1PABD
                 MessageBox.Show("No. Telepon hanya boleh angka!");
                 return;
             }
-
-            conn.Open();
-            SqlTransaction transaction = conn.BeginTransaction();
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                SqlCommand cmd = new SqlCommand("sp_UpdatePelanggan", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("sp_UpdatePelanggan", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
-                cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);
-                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
-                cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
+                    cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
+                    cmd.Parameters.AddWithValue("@Nama_Pelanggan", txtNama.Text);
+                    cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                    cmd.Parameters.AddWithValue("@NoTelepon", txtNoTelepon.Text);
 
-                cmd.ExecuteNonQuery();
-                transaction.Commit();
-                _cache.Remove(_cacheKey);
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    _cache.Remove(_cacheKey);
 
-                MessageBox.Show("Data pelanggan berhasil diupdate.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadData();
-                ClearInput();
-                selectedPelangganId = -1;
-            }
-            catch (SqlException ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal update pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
+                    MessageBox.Show("Data pelanggan berhasil diupdate.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadData();
+                    ClearInput();
+                    selectedPelangganId = -1;
+                }
+                catch (SqlException ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal update pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
         }
 
@@ -211,34 +220,36 @@ namespace UCP1PABD
             var result = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo);
             if (result != DialogResult.Yes)
                 return;
-
-            conn.Open();
-            SqlTransaction transaction = conn.BeginTransaction();
-
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                SqlCommand cmd = new SqlCommand("sp_DeletePelanggan", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
 
-                cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("sp_DeletePelanggan", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.ExecuteNonQuery();
-                transaction.Commit();
-                _cache.Remove(_cacheKey);
+                    cmd.Parameters.AddWithValue("@PelangganID", selectedPelangganId);
 
-                MessageBox.Show("Data pelanggan berhasil dihapus.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadData();
-                ClearInput();
-                selectedPelangganId = -1;
-            }
-            catch (SqlException ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal hapus pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    _cache.Remove(_cacheKey);
+
+                    MessageBox.Show("Data pelanggan berhasil dihapus.", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadData();
+                    ClearInput();
+                    selectedPelangganId = -1;
+                }
+                catch (SqlException ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal hapus pelanggan: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
         }
 
@@ -253,7 +264,7 @@ namespace UCP1PABD
             else
             {
                 dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", conn);
+                SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", kn.connectionString());
                 da.Fill(dt);
                 _cache.Add(_cacheKey, dt, _cachePolicy); // Simpan ke cache
             }

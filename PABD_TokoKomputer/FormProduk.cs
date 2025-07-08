@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Caching;
+using PABD_TokoKomputer;
 
 namespace UCP1PABD
 {
@@ -21,7 +22,7 @@ namespace UCP1PABD
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
         };
-        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        koneksi kn = new koneksi();
         private int selectedID = 0;
 
         public FormProduk()
@@ -31,9 +32,11 @@ namespace UCP1PABD
 
         private void EnsureIndexes()
         {
-            conn.Open();
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
 
-            string indexScript = @"
+                string indexScript = @"
                     -- Pelanggan
                     IF OBJECT_ID('dbo.Pelanggan', 'U') IS NOT NULL
                     BEGIN
@@ -75,21 +78,21 @@ namespace UCP1PABD
                     END
                     ";
 
-            using (var cmd = new SqlCommand(indexScript, conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
+                using (var cmd = new SqlCommand(indexScript, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
 
-            conn.Close();
+                conn.Close();
+            }
         }
 
         private void LoadData()
         {
-            SqlDataAdapter da = new SqlDataAdapter("SELECT ProdukID, NamaProduk, NamaMerk, KategoriProduk, Harga, Stok FROM Produk", conn);
+            SqlDataAdapter da = new SqlDataAdapter("SELECT ProdukID, NamaProduk, NamaMerk, KategoriProduk, Harga, Stok FROM Produk", kn.connectionString());
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
-        
 
         }
 
@@ -123,79 +126,33 @@ namespace UCP1PABD
                     MessageBox.Show("Stok harus berupa angka 0 atau lebih!");
                     return;
                 }
-
-                conn.Open();
-                SqlTransaction transaction = conn.BeginTransaction();
-
-                try
-                {
-                    SqlCommand cmd = new SqlCommand("sp_InsertProduk", conn, transaction);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
-                    cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
-                    cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                    cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
-                    cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
-
-                    cmd.ExecuteNonQuery();
-                    transaction.Commit();
-                    _cache.Remove(_cacheKey);
-
-                    MessageBox.Show("Data produk berhasil ditambahkan!");
-                    LoadData();
-                    ClearInput();
-                }
-                catch (SqlException ex)
-                {
-                    try { transaction.Rollback(); } catch { }
-                    MessageBox.Show("Gagal tambah produk: " + ex.Message);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Lengkapi semua input!");
-            }
-        }
-
-        private void FormProduk_Load(object sender, EventArgs e)
-        {
-            LoadData();
-            dataGridView1.CellClick += dataGridView1_CellClick;
-        }
-
-        private void btnHapus_Click(object sender, EventArgs e)
-        {
-            if (selectedID != 0)
-            {
-                var result = MessageBox.Show("Yakin ingin menghapus produk ini?", "Konfirmasi", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
+                using (SqlConnection conn = new SqlConnection(kn.connectionString()))
                 {
                     conn.Open();
                     SqlTransaction transaction = conn.BeginTransaction();
 
                     try
                     {
-                        SqlCommand cmd = new SqlCommand("sp_DeleteProduk", conn, transaction);
+                        SqlCommand cmd = new SqlCommand("sp_InsertProduk", conn, transaction);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id", selectedID);
+                        cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
+                        cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
+                        cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
+                        cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                        cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
 
                         cmd.ExecuteNonQuery();
                         transaction.Commit();
                         _cache.Remove(_cacheKey);
 
-                        MessageBox.Show("Data produk berhasil dihapus!");
+                        MessageBox.Show("Data produk berhasil ditambahkan!");
                         LoadData();
                         ClearInput();
-                        selectedID = 0;
                     }
                     catch (SqlException ex)
                     {
                         try { transaction.Rollback(); } catch { }
-                        MessageBox.Show("Gagal hapus produk: " + ex.Message);
+                        MessageBox.Show("Gagal tambah produk: " + ex.Message);
                     }
                     finally
                     {
@@ -205,9 +162,63 @@ namespace UCP1PABD
             }
             else
             {
-                MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
+                MessageBox.Show("Lengkapi semua input!");
             }
         }
+            
+
+        private void FormProduk_Load(object sender, EventArgs e)
+        {
+            LoadData();
+            dataGridView1.CellClick += dataGridView1_CellClick;
+        }
+
+        private void btnHapus_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                if (selectedID != 0)
+                {
+                    var result = MessageBox.Show("Yakin ingin menghapus produk ini?", "Konfirmasi", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        conn.Open();
+                        SqlTransaction transaction = conn.BeginTransaction();
+
+                        try
+                        {
+                            SqlCommand cmd = new SqlCommand("sp_DeleteProduk", conn, transaction);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@id", selectedID);
+
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                            _cache.Remove(_cacheKey);
+
+                            MessageBox.Show("Data produk berhasil dihapus!");
+                            LoadData();
+                            ClearInput();
+                            selectedID = 0;
+                        }
+                        catch (SqlException ex)
+                        {
+                            try { transaction.Rollback(); } catch { }
+                            MessageBox.Show("Gagal hapus produk: " + ex.Message);
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
+                    }
+                }
+
+                else
+                {
+                    MessageBox.Show("Pilih data yang ingin dihapus terlebih dahulu.");
+                }
+            }
+        }
+        
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -242,36 +253,39 @@ namespace UCP1PABD
                         return;
                     }
 
-                    conn.Open();
-                    SqlTransaction transaction = conn.BeginTransaction();
-
-                    try
+                    using (SqlConnection conn = new SqlConnection(kn.connectionString()))
                     {
-                        SqlCommand cmd = new SqlCommand("sp_UpdateProduk", conn, transaction);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@id", selectedID);
-                        cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
-                        cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
-                        cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                        cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
-                        cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
+                        conn.Open();
+                        SqlTransaction transaction = conn.BeginTransaction();
 
-                        cmd.ExecuteNonQuery();
-                        transaction.Commit();
-                        _cache.Remove(_cacheKey);
+                        try
+                        {
+                            SqlCommand cmd = new SqlCommand("sp_UpdateProduk", conn, transaction);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@id", selectedID);
+                            cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
+                            cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
+                            cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
+                            cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                            cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
 
-                        MessageBox.Show("Data produk berhasil diubah!");
-                        LoadData();
-                        ClearInput();
-                    }
-                    catch (SqlException ex)
-                    {
-                        try { transaction.Rollback(); } catch { }
-                        MessageBox.Show("Gagal ubah produk: " + ex.Message);
-                    }
-                    finally
-                    {
-                        conn.Close();
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                            _cache.Remove(_cacheKey);
+
+                            MessageBox.Show("Data produk berhasil diubah!");
+                            LoadData();
+                            ClearInput();
+                        }
+                        catch (SqlException ex)
+                        {
+                            try { transaction.Rollback(); } catch { }
+                            MessageBox.Show("Gagal ubah produk: " + ex.Message);
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
                     }
                 }
                 else
@@ -284,6 +298,9 @@ namespace UCP1PABD
                 MessageBox.Show("Pilih data yang ingin diedit terlebih dahulu.");
             }
         }
+
+
+
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {

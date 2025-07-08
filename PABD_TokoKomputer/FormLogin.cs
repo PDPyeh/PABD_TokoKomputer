@@ -15,15 +15,17 @@ namespace PABD_TokoKomputer
 {
     public partial class FormLogin : Form
     {
-        private string connectionString = "Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True";
+        koneksi kn = new koneksi();
+        string strkonek = "";
         public FormLogin()
         {
             InitializeComponent();
+            strkonek = kn.connectionString();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(strkonek))
             {
                 conn.Open();
                 string query = "SELECT COUNT(*) FROM Users WHERE Username=@user AND Password=@pass";

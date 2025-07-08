@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Caching;
+using PABD_TokoKomputer;
 
 namespace UCP1PABD
 {
@@ -21,8 +22,9 @@ namespace UCP1PABD
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5) // cache selama 5 menit
         };
-        private SqlConnection conn = new SqlConnection("Data Source=LAPTOP-Q7EVPB6K\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1;Integrated Security=True");
+        
         int selectedID = 0;
+        koneksi kn = new koneksi();
         public FormPembayaran()
         {
             InitializeComponent();
@@ -40,22 +42,27 @@ namespace UCP1PABD
 
         private void LoadComboBox()
         {
-            conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT Pemesanan.PemesananID, Pelanggan.Nama_Pelanggan FROM Pemesanan JOIN Pelanggan ON Pemesanan.PelangganID = Pelanggan.PelangganID", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            conn.Close();
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT Pemesanan.PemesananID, Pelanggan.Nama_Pelanggan FROM Pemesanan JOIN Pelanggan ON Pemesanan.PelangganID = Pelanggan.PelangganID", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                conn.Close();
 
-            cbPemesanan.DataSource = dt;
-            cbPemesanan.DisplayMember = "Nama_Pelanggan";
-            cbPemesanan.ValueMember = "PemesananID";
+                cbPemesanan.DataSource = dt;
+                cbPemesanan.DisplayMember = "Nama_Pelanggan";
+                cbPemesanan.ValueMember = "PemesananID";
+            }
         }
 
         private void EnsureIndexes()
         {
-            conn.Open();
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
 
-            string indexScript = @"
+                string indexScript = @"
             -- Pelanggan
             IF OBJECT_ID('dbo.Pelanggan', 'U') IS NOT NULL
             BEGIN
@@ -97,24 +104,28 @@ namespace UCP1PABD
             END
             ";
 
-            using (var cmd = new SqlCommand(indexScript, conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
+                using (var cmd = new SqlCommand(indexScript, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
 
-            conn.Close();
+                conn.Close();
+            }
         }
 
         private void LoadData()
         {
-            conn.Open();
-            SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Pembayaran", conn);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            dataGridView1.DataSource = dt;
-            conn.Close();
-            dtpTanggal.MinDate = DateTime.Today;
-            dtpTanggal.MaxDate = new DateTime(DateTime.Today.Year, 12, 31);
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Pembayaran", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+                conn.Close();
+                dtpTanggal.MinDate = DateTime.Today;
+                dtpTanggal.MaxDate = new DateTime(DateTime.Today.Year, 12, 31);
+            }
         }
 
         private void FormPembayaran_Load(object sender, EventArgs e)
@@ -133,42 +144,45 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
-            conn.Open();
-            SqlTransaction transaction = conn.BeginTransaction();
-
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                decimal nominalDecimal;
-                string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
-                if (!decimal.TryParse(nominalStr, out nominalDecimal))
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
                 {
-                    MessageBox.Show("Format jumlah pembayaran tidak valid!");
-                    return;
+                    decimal nominalDecimal;
+                    string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+                    if (!decimal.TryParse(nominalStr, out nominalDecimal))
+                    {
+                        MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                        return;
+                    }
+
+
+                    SqlCommand cmd = new SqlCommand("sp_InsertPembayaran", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
+                    cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
+                    cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
+                    cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
+
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    _cache.Remove(_cacheKey);
+                    MessageBox.Show("Data pembayaran berhasil ditambahkan.");
                 }
-
-
-                SqlCommand cmd = new SqlCommand("sp_InsertPembayaran", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
-                cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
-                cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
-                cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
-
-                cmd.ExecuteNonQuery();
-                transaction.Commit();
-                _cache.Remove(_cacheKey);
-                MessageBox.Show("Data pembayaran berhasil ditambahkan.");
-            }
-            catch (Exception ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal tambah data: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-                LoadData();
-                ClearInput();
+                catch (Exception ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal tambah data: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                }
             }
         }
 
@@ -176,44 +190,47 @@ namespace UCP1PABD
         {
             if (selectedID == 0) return;
 
-            conn.Open();
-            SqlTransaction transaction = conn.BeginTransaction();
-
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                decimal nominalDecimal;
-                string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
-                if (!decimal.TryParse(nominalStr, out nominalDecimal))
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
                 {
-                    MessageBox.Show("Format jumlah pembayaran tidak valid!");
-                    return;
+                    decimal nominalDecimal;
+                    string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+                    if (!decimal.TryParse(nominalStr, out nominalDecimal))
+                    {
+                        MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                        return;
+                    }
+
+
+
+                    SqlCommand cmd = new SqlCommand("sp_UpdatePembayaran", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
+                    cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
+                    cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
+                    cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
+                    cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
+
+                    cmd.ExecuteNonQuery();
+                    _cache.Remove(_cacheKey);
+                    transaction.Commit();
+                    MessageBox.Show("Data pembayaran berhasil diupdate.");
                 }
-
-                
-
-                SqlCommand cmd = new SqlCommand("sp_UpdatePembayaran", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
-                cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
-                cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
-                cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
-                cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
-
-                cmd.ExecuteNonQuery();
-                _cache.Remove(_cacheKey);
-                transaction.Commit();
-                MessageBox.Show("Data pembayaran berhasil diupdate.");
-            }
-            catch (Exception ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal update data: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-                LoadData();
-                ClearInput();
+                catch (Exception ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal update data: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                }
             }
         }
 
@@ -221,31 +238,34 @@ namespace UCP1PABD
         {
             if (selectedID == 0) return;
 
-            conn.Open();
-            SqlTransaction transaction = conn.BeginTransaction();
-
-            try
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
+                conn.Open();
+                SqlTransaction transaction = conn.BeginTransaction();
 
-                SqlCommand cmd = new SqlCommand("sp_DeletePembayaran", conn, transaction);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
+                try
+                {
 
-                cmd.ExecuteNonQuery();
-                _cache.Remove(_cacheKey);
-                transaction.Commit();
-                MessageBox.Show("Data pembayaran berhasil dihapus.");
-            }
-            catch (Exception ex)
-            {
-                try { transaction.Rollback(); } catch { }
-                MessageBox.Show("Gagal hapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
-                LoadData();
-                ClearInput();
+                    SqlCommand cmd = new SqlCommand("sp_DeletePembayaran", conn, transaction);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
+
+                    cmd.ExecuteNonQuery();
+                    _cache.Remove(_cacheKey);
+                    transaction.Commit();
+                    MessageBox.Show("Data pembayaran berhasil dihapus.");
+                }
+                catch (Exception ex)
+                {
+                    try { transaction.Rollback(); } catch { }
+                    MessageBox.Show("Gagal hapus data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    conn.Close();
+                    LoadData();
+                    ClearInput();
+                }
             }
         }
 
@@ -277,28 +297,31 @@ namespace UCP1PABD
         {
             if (cbPemesanan.SelectedValue != null)
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(@"
+                using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(@"
             SELECT pr.Harga, pm.Jumlah
             FROM Pemesanan pm
             JOIN Produk pr ON pm.ProdukID = pr.ProdukID
             WHERE pm.PemesananID = @id", conn);
 
-                cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
-                SqlDataReader reader = cmd.ExecuteReader();
+                    cmd.Parameters.AddWithValue("@id", cbPemesanan.SelectedValue);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-                if (reader.Read())
-                {
-                    decimal harga = Convert.ToDecimal(reader["Harga"]);
-                    int jumlah = Convert.ToInt32(reader["Jumlah"]);
-                    decimal total = harga * jumlah;
+                    if (reader.Read())
+                    {
+                        decimal harga = Convert.ToDecimal(reader["Harga"]);
+                        int jumlah = Convert.ToInt32(reader["Jumlah"]);
+                        decimal total = harga * jumlah;
 
-                    LblJumlah.Text = "Rp " + total.ToString("N0"); // tampilkan dengan format
+                        LblJumlah.Text = "Rp " + total.ToString("N0"); // tampilkan dengan format
 
+                    }
+
+                    reader.Close();
+                    conn.Close();
                 }
-
-                reader.Close();
-                conn.Close();
             }
         }
 
