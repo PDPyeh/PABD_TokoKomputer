@@ -115,7 +115,7 @@ namespace UCP1PABD
 
             if (!IsNoTeleponValid(txtNoTelepon.Text))
             {
-                MessageBox.Show("No. Telepon hanya boleh angka dan minimal 9 digit!");
+                MessageBox.Show("No. Telepon hanya boleh angka, minimal 9 digit dan maximal 13 !");
                 return;
             }
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
@@ -173,7 +173,7 @@ namespace UCP1PABD
 
                 if (txtNoTelepon.Enabled && !IsNoTeleponValid(txtNoTelepon.Text))
                 {
-                    MessageBox.Show("No. Telepon hanya boleh angka dan minimal 9 digit!");
+                    MessageBox.Show("No. Telepon hanya boleh angka, minimal 9 digit dan maximal 13 !");
                     return;
                 }
             
@@ -327,7 +327,7 @@ namespace UCP1PABD
         private bool IsNoTeleponValid(string no)
         {
             no = no.Trim(); // hapus spasi depan-belakang
-            return !string.IsNullOrEmpty(no) && no.All(char.IsDigit) && no.Length >= 9;
+            return !string.IsNullOrEmpty(no) && no.All(char.IsDigit) && no.Length >= 9 && no.Length <= 13;
         }
 
         
