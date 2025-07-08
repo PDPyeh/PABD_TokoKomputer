@@ -327,10 +327,26 @@ namespace UCP1PABD
         {
             if (e.RowIndex >= 0)
             {
+
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
                 selectedID = Convert.ToInt32(row.Cells["PembayaranID"].Value);
                 cbPemesanan.SelectedValue = Convert.ToInt32(row.Cells["PemesananID"].Value);
-                dtpTanggal.Value = Convert.ToDateTime(row.Cells["TanggalPembayaran"].Value);
+                DateTime tanggal;
+                if (DateTime.TryParse(row.Cells["TanggalPembayaran"].Value.ToString(), out tanggal))
+                {
+                    if (tanggal >= dtpTanggal.MinDate && tanggal <= dtpTanggal.MaxDate)
+                    {
+                        dtpTanggal.Value = tanggal;
+                    }
+                    else
+                    {
+                        dtpTanggal.Value = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    dtpTanggal.Value = DateTime.Now;
+                }
                 LblJumlah.Text = row.Cells["JumlahPembayaran"].Value.ToString();
                 cbStatusBayar.Text = row.Cells["StatusPembayaran"].Value.ToString();
                 decimal jumlah = Convert.ToDecimal(row.Cells["JumlahPembayaran"].Value);

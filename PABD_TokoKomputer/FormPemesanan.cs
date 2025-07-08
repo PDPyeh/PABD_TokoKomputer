@@ -337,7 +337,22 @@ namespace UCP1PABD
                 selectedID = Convert.ToInt32(row.Cells["PemesananID"].Value);
                 cbPelanggan.SelectedValue = Convert.ToInt32(row.Cells["PelangganID"].Value);
                 cbProduk.SelectedValue = Convert.ToInt32(row.Cells["ProdukID"].Value);
-                dtpTanggal.Value = Convert.ToDateTime(row.Cells["TanggalPemesanan"].Value);
+                DateTime tanggal;
+                if (DateTime.TryParse(row.Cells["TanggalPemesanan"].Value.ToString(), out tanggal))
+                {
+                    if (tanggal >= dtpTanggal.MinDate && tanggal <= dtpTanggal.MaxDate)
+                    {
+                        dtpTanggal.Value = tanggal;
+                    }
+                    else
+                    {
+                        dtpTanggal.Value = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    dtpTanggal.Value = DateTime.Now;
+                }
                 cbStatus.Text = row.Cells["Status_Pesanan"].Value.ToString();
                 txtJumlah.Text = row.Cells["Jumlah"].Value.ToString();
             }
