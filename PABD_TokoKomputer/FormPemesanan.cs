@@ -155,6 +155,11 @@ namespace UCP1PABD
 
         private void btnTambah_Click(object sender, EventArgs e)
         {
+            if (cbPelanggan.SelectedIndex == -1 || cbProduk.SelectedIndex == -1 || cbStatus.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtJumlah.Text))
+            {
+                MessageBox.Show("Semua field harus diisi sebelum menambahkan pemesanan!", "Validasi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             int produkID = ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key;
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {

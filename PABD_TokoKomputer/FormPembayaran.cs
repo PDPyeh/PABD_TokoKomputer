@@ -264,7 +264,15 @@ namespace UCP1PABD
 
         private void btnHapus_Click(object sender, EventArgs e)
         {
-            if (selectedID == 0) return;
+            if (selectedID == 0)
+            {
+                MessageBox.Show("Silakan pilih data yang ingin dihapus terlebih dahulu!", "Validasi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var konfirmasi = MessageBox.Show("Yakin ingin menghapus data ini?", "Konfirmasi Hapus", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (konfirmasi != DialogResult.Yes)
+                return;
 
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {

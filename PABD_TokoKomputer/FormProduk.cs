@@ -121,11 +121,7 @@ namespace UCP1PABD
                     return;
                 }
 
-                if (IsDuplicateProduk(txtNamaProduk.Text, selectedID))
-                {
-                    MessageBox.Show("Data produk dengan nama yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                
 
                 if (!IsStokValid(txtStok.Text))
                 {
@@ -272,11 +268,7 @@ namespace UCP1PABD
                         return;
                     }
 
-                    if (IsDuplicateProduk(txtNamaProduk.Text, selectedID))
-                    {
-                        MessageBox.Show("Data produk dengan nama yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                    
 
                     if (!IsStokValid(txtStok.Text))
                     {
@@ -367,25 +359,7 @@ namespace UCP1PABD
 
         }
 
-        private bool IsDuplicateProduk(string nama, int excludeId = -1)
-        {
-            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
-            {
-                conn.Open();
-                string query = @"SELECT COUNT(*) FROM Produk 
-                         WHERE NamaProduk = @nama  
-                         AND ProdukID != @id";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@nama", nama);
-                    cmd.Parameters.AddWithValue("@id", excludeId); // untuk pengecualian data yang sedang di-edit
-
-                    int count = (int)cmd.ExecuteScalar();
-                    return count > 0;
-                }
-            }
-        }
+        
     }
 
 }
