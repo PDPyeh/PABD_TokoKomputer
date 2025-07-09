@@ -70,7 +70,7 @@ namespace PABD_TokoKomputer
                     lblStatusKoneksi.Text = "Koneksi database BERHASIL.";
                     lblStatusKoneksi.ForeColor = Color.Green;
                 }
-                catch (Exception ex)
+                catch (Exception    ex)
                 {
                     lblStatusKoneksi.Text = "Koneksi database GAGAL!";
                     lblStatusKoneksi.ForeColor = Color.Red;
