@@ -118,6 +118,13 @@ namespace UCP1PABD
                 MessageBox.Show("No. Telepon hanya boleh angka, minimal 9 digit dan maximal 13 !");
                 return;
             }
+
+            if (IsDuplicatePelanggan(txtNama.Text, txtNoTelepon.Text))
+            {
+                MessageBox.Show("Data pelanggan dengan nama dan nomor telepon yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
                 conn.Open();
@@ -164,7 +171,26 @@ namespace UCP1PABD
                     return;
                 }
 
-            // Validasi input
+                DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+                string oldNama = selectedRow.Cells["Nama_Pelanggan"].Value.ToString();
+                string oldAlamat = selectedRow.Cells["Alamat"].Value.ToString();
+                string oldTelepon = selectedRow.Cells["NoTelepon"].Value.ToString();
+
+                // Cek apakah data berubah
+                if (txtNama.Text == oldNama && txtAlamat.Text == oldAlamat && txtNoTelepon.Text == oldTelepon)
+                {
+                    MessageBox.Show("Silakan ubah data sebelum menyimpan!", "Tidak Ada Perubahan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validasi duplikat
+                if (IsDuplicatePelanggan(txtNama.Text, txtNoTelepon.Text, selectedPelangganId))
+                {
+                    MessageBox.Show("Data pelanggan dengan nama dan nomor telepon yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validasi input
                 if (!IsNamaValid(txtNama.Text))
                 {
                     MessageBox.Show("Nama tidak boleh mengandung angka!");
@@ -330,6 +356,27 @@ namespace UCP1PABD
             return !string.IsNullOrEmpty(no) && no.All(char.IsDigit) && no.Length >= 9 && no.Length <= 13;
         }
 
-        
+        private bool IsDuplicatePelanggan(string nama, string noTelepon, int excludeId = -1)
+        {
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
+                string query = @"SELECT COUNT(*) FROM Pelanggan 
+                         WHERE Nama_Pelanggan = @nama 
+                         AND NoTelepon = @noTelp 
+                         AND PelangganID != @id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nama", nama);
+                    cmd.Parameters.AddWithValue("@noTelp", noTelepon);
+                    cmd.Parameters.AddWithValue("@id", excludeId); // untuk pengecualian data yang sedang di-edit
+
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
     }
 }

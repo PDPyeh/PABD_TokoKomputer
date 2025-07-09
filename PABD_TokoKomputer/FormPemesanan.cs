@@ -241,6 +241,31 @@ namespace UCP1PABD
                 return;
             }
 
+            // Ambil data lama dari DataGridView
+            DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+            int oldPelangganID = Convert.ToInt32(selectedRow.Cells["PelangganID"].Value);
+            int oldProdukID = Convert.ToInt32(selectedRow.Cells["ProdukID"].Value);
+            int oldJumlah = Convert.ToInt32(selectedRow.Cells["Jumlah"].Value);
+            string oldStatus = selectedRow.Cells["Status_Pesanan"].Value.ToString();
+            DateTime oldTanggal = Convert.ToDateTime(selectedRow.Cells["TanggalPemesanan"].Value);
+
+            int newPelangganID = ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key;
+            int newProdukID = ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key;
+            string newStatus = cbStatus.Text;
+            DateTime newTanggal = dtpTanggal.Value;
+
+            if (
+                oldPelangganID == newPelangganID &&
+                oldProdukID == newProdukID &&
+                oldJumlah == jumlahStok &&
+                oldStatus == newStatus &&
+                oldTanggal.Date == newTanggal.Date
+            )
+            {
+                MessageBox.Show("Silakan ubah data terlebih dahulu sebelum menyimpan.", "Tidak Ada Perubahan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
                 conn.Open();
@@ -252,10 +277,10 @@ namespace UCP1PABD
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@PemesananID", selectedID);
-                    cmd.Parameters.AddWithValue("@PelangganID", ((KeyValuePair<int, string>)cbPelanggan.SelectedItem).Key);
-                    cmd.Parameters.AddWithValue("@ProdukID", ((KeyValuePair<int, string>)cbProduk.SelectedItem).Key);
+                    cmd.Parameters.AddWithValue("@PelangganID", newPelangganID);
+                    cmd.Parameters.AddWithValue("@ProdukID", newProdukID);
                     cmd.Parameters.AddWithValue("@Jumlah", jumlahStok);
-                    cmd.Parameters.AddWithValue("@Status_Pesanan", cbStatus.Text);
+                    cmd.Parameters.AddWithValue("@Status_Pesanan", newStatus);
 
                     cmd.ExecuteNonQuery();
                     transaction.Commit();

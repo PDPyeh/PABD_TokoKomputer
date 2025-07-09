@@ -117,7 +117,13 @@ namespace UCP1PABD
             {
                 if (!IsHargaValid(txtHarga.Text))
                 {
-                    MessageBox.Show("Harga hanya boleh angka!");
+                    MessageBox.Show("Harga hanya boleh angka dan lebih dari 0 !");
+                    return;
+                }
+
+                if (IsDuplicateProduk(txtNamaProduk.Text, selectedID))
+                {
+                    MessageBox.Show("Data produk dengan nama yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -241,9 +247,34 @@ namespace UCP1PABD
             {
                 if (txtNamaProduk.Text != "" && txtMerk.Text != "" && txtKategori.Text != "" && txtHarga.Text != "" && txtStok.Text != "")
                 {
+                    DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+                    string oldNama = selectedRow.Cells["NamaProduk"].Value.ToString();
+                    string oldMerk = selectedRow.Cells["NamaMerk"].Value.ToString();
+                    string oldKategori = selectedRow.Cells["KategoriProduk"].Value.ToString();
+                    string oldHarga = selectedRow.Cells["Harga"].Value.ToString();
+                    string oldStok = selectedRow.Cells["Stok"].Value.ToString();
+
+                    
+                    if (
+                        txtNamaProduk.Text == oldNama &&
+                        txtMerk.Text == oldMerk &&
+                        txtKategori.Text == oldKategori &&
+                        txtHarga.Text == oldHarga &&
+                        txtStok.Text == oldStok
+                    )
+                    {
+                        MessageBox.Show("Silakan ubah data terlebih dahulu sebelum menyimpan.", "Tidak Ada Perubahan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                     if (!IsHargaValid(txtHarga.Text))
                     {
-                        MessageBox.Show("Harga hanya boleh angka!");
+                        MessageBox.Show("Harga hanya boleh angka dan lebih dari 0 !");
+                        return;
+                    }
+
+                    if (IsDuplicateProduk(txtNamaProduk.Text, selectedID))
+                    {
+                        MessageBox.Show("Data produk dengan nama yang sama sudah ada!", "Duplikat", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -322,7 +353,7 @@ namespace UCP1PABD
 
         private bool IsHargaValid(string input)
         {
-            return decimal.TryParse(input, out _);
+            return decimal.TryParse(input, out decimal value) && value >= 0;
         }
 
 
@@ -334,6 +365,26 @@ namespace UCP1PABD
         private void txtStok_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private bool IsDuplicateProduk(string nama, int excludeId = -1)
+        {
+            using (SqlConnection conn = new SqlConnection(kn.connectionString()))
+            {
+                conn.Open();
+                string query = @"SELECT COUNT(*) FROM Produk 
+                         WHERE NamaProduk = @nama  
+                         AND ProdukID != @id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nama", nama);
+                    cmd.Parameters.AddWithValue("@id", excludeId); // untuk pengecualian data yang sedang di-edit
+
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
         }
     }
 

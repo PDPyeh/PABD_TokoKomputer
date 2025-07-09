@@ -188,8 +188,46 @@ namespace UCP1PABD
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            if (selectedID == 0) return;
+            if (selectedID == 0)
+            {
+                MessageBox.Show("Pilih data pembayaran yang ingin diedit!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // Ambil data lama dari DataGridView
+            DataGridViewRow selectedRow = dataGridView1.CurrentRow;
+            int oldPemesananID = Convert.ToInt32(selectedRow.Cells["PemesananID"].Value);
+            DateTime oldTanggal = Convert.ToDateTime(selectedRow.Cells["TanggalPembayaran"].Value);
+            decimal oldJumlah = Convert.ToDecimal(selectedRow.Cells["JumlahPembayaran"].Value);
+            string oldStatus = selectedRow.Cells["StatusPembayaran"].Value.ToString();
+
+            // Ambil data baru dari input
+            int newPemesananID = Convert.ToInt32(cbPemesanan.SelectedValue);
+            DateTime newTanggal = dtpTanggal.Value.Date;
+
+            decimal newJumlah;
+            string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
+            if (!decimal.TryParse(nominalStr, out newJumlah))
+            {
+                MessageBox.Show("Format jumlah pembayaran tidak valid!");
+                return;
+            }
+
+            string newStatus = cbStatusBayar.Text;
+
+            // Bandingkan
+            if (
+                oldPemesananID == newPemesananID &&
+                oldTanggal.Date == newTanggal &&
+                oldJumlah == newJumlah &&
+                oldStatus.Trim().ToLower() == newStatus.Trim().ToLower()
+            )
+            {
+                MessageBox.Show("Silakan ubah data terlebih dahulu sebelum menyimpan.", "Tidak Ada Perubahan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Jika ada perubahan, lanjutkan update
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
                 conn.Open();
@@ -197,23 +235,13 @@ namespace UCP1PABD
 
                 try
                 {
-                    decimal nominalDecimal;
-                    string nominalStr = LblJumlah.Text.Replace("Rp", "").Replace(" ", "").Replace(",", "");
-                    if (!decimal.TryParse(nominalStr, out nominalDecimal))
-                    {
-                        MessageBox.Show("Format jumlah pembayaran tidak valid!");
-                        return;
-                    }
-
-
-
                     SqlCommand cmd = new SqlCommand("sp_UpdatePembayaran", conn, transaction);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@PembayaranID", selectedID);
-                    cmd.Parameters.AddWithValue("@PemesananID", cbPemesanan.SelectedValue);
-                    cmd.Parameters.AddWithValue("@TanggalPembayaran", dtpTanggal.Value.Date);
-                    cmd.Parameters.AddWithValue("@JumlahPembayaran", nominalDecimal);
-                    cmd.Parameters.AddWithValue("@StatusPembayaran", cbStatusBayar.Text);
+                    cmd.Parameters.AddWithValue("@PemesananID", newPemesananID);
+                    cmd.Parameters.AddWithValue("@TanggalPembayaran", newTanggal);
+                    cmd.Parameters.AddWithValue("@JumlahPembayaran", newJumlah);
+                    cmd.Parameters.AddWithValue("@StatusPembayaran", newStatus);
 
                     cmd.ExecuteNonQuery();
                     _cache.Remove(_cacheKey);

@@ -15,8 +15,8 @@ namespace PABD_TokoKomputer
             string connectStr = "";
             try
             {
-                string localIP = GetLocalIPAddress(); // mendeklarasikan ipaddress
-                connectStr = $"Server={localIP}\\PRADIPAYOGANANDA;Initial Catalog=SistemTokoComputerPABD_1; Integrated Security=True;";
+                string localIP = GetLocalIPAddress(); // opsional, bisa dihapus kalau gak dipakai
+                connectStr = "Server=10.200.60.152,1433;Initial Catalog=SistemTokoComputerPABD_1;User ID=adminToko;Password=1234;";
                 return connectStr;
             }
             catch (Exception ex)
@@ -25,6 +25,7 @@ namespace PABD_TokoKomputer
                 return string.Empty;
             }
         }
+
 
         public static string GetLocalIPAddress() // untuk mengambil IP Address pada PC yang menjalankan aplikasi
         {
