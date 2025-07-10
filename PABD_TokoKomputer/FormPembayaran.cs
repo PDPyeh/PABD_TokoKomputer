@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Caching;
 using PABD_TokoKomputer;
+using System.Diagnostics;
 
 namespace UCP1PABD
 {
@@ -115,6 +116,9 @@ namespace UCP1PABD
 
         private void LoadData()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
                 conn.Open();
@@ -122,10 +126,16 @@ namespace UCP1PABD
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 dataGridView1.DataSource = dt;
-                conn.Close();
+
                 dtpTanggal.MinDate = DateTime.Today;
                 dtpTanggal.MaxDate = new DateTime(DateTime.Today.Year, 12, 31);
+                conn.Close();
             }
+
+            sw.Stop();
+
+            if (lbLoadTime != null)
+                lbLoadTime.Text = $"Waktu Load: {sw.ElapsedMilliseconds} ms ";
         }
 
         private void FormPembayaran_Load(object sender, EventArgs e)

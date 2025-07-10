@@ -13,6 +13,7 @@ using System.Runtime.Caching;
 using OfficeOpenXml;
 using System.IO;
 using PABD_TokoKomputer;
+using System.Diagnostics;
 
 namespace UCP1PABD
 {
@@ -282,6 +283,9 @@ namespace UCP1PABD
 
         private void LoadData()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             DataTable dt;
 
             if (_cache.Contains(_cacheKey))
@@ -291,12 +295,18 @@ namespace UCP1PABD
             else
             {
                 dt = new DataTable();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", kn.connectionString());
-                da.Fill(dt);
+                using (SqlDataAdapter da = new SqlDataAdapter("SELECT PelangganID, Nama_Pelanggan, Alamat, NoTelepon FROM Pelanggan", kn.connectionString()))
+                {
+                    da.Fill(dt);
+                }
                 _cache.Add(_cacheKey, dt, _cachePolicy); // Simpan ke cache
             }
 
             dataGridView1.DataSource = dt;
+            sw.Stop();
+
+            if (lblLoadTime != null)
+                lblLoadTime.Text = $"Waktu Load: {sw.ElapsedMilliseconds} ms ";
         }
 
 

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Caching;
 using PABD_TokoKomputer;
+using System.Diagnostics;
 
 namespace UCP1PABD
 {
@@ -89,10 +90,18 @@ namespace UCP1PABD
 
         private void LoadData()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             SqlDataAdapter da = new SqlDataAdapter("SELECT ProdukID, NamaProduk, NamaMerk, KategoriProduk, Harga, Stok FROM Produk", kn.connectionString());
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
+
+            sw.Stop();
+
+            if (lbLoadTime != null)
+                lbLoadTime.Text = $"Waktu Load: {sw.ElapsedMilliseconds} ms";
 
         }
 

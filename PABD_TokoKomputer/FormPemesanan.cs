@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Caching;
 using PABD_TokoKomputer;
+using System.Diagnostics;
 
 namespace UCP1PABD
 {
@@ -131,17 +132,21 @@ namespace UCP1PABD
 
         private void LoadData()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             using (SqlConnection conn = new SqlConnection(kn.connectionString()))
             {
-                {
-                    conn.Open();
-                    SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Pemesanan", conn);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                    conn.Close();
-                }
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Pemesanan", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+                conn.Close();
             }
+
+            sw.Stop();
+            lbLoadTime.Text = $"Waktu Load: {sw.ElapsedMilliseconds} ms";
         }
         private void dtpTanggal_ValueChanged(object sender, EventArgs e)
         {

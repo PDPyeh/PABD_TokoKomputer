@@ -41,6 +41,7 @@ namespace UCP1PABD
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
+            this.lblLoadTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -149,12 +150,21 @@ namespace UCP1PABD
             this.label4.TabIndex = 12;
             this.label4.Text = "Form Pelanggan";
             // 
+            // lblLoadTime
+            // 
+            this.lblLoadTime.AutoSize = true;
+            this.lblLoadTime.Location = new System.Drawing.Point(13, 445);
+            this.lblLoadTime.Name = "lblLoadTime";
+            this.lblLoadTime.Size = new System.Drawing.Size(0, 13);
+            this.lblLoadTime.TabIndex = 14;
+            // 
             // FormPelanggan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(790, 460);
+            this.Controls.Add(this.lblLoadTime);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label3);
@@ -193,5 +203,6 @@ namespace UCP1PABD
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblLoadTime;
     }
 }

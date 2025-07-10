@@ -44,6 +44,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.LblStok = new System.Windows.Forms.Label();
+            this.lbLoadTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -195,12 +196,21 @@
             this.LblStok.TabIndex = 16;
             this.LblStok.Text = "\"Stok: -\"";
             // 
+            // lbLoadTime
+            // 
+            this.lbLoadTime.AutoSize = true;
+            this.lbLoadTime.Location = new System.Drawing.Point(15, 9);
+            this.lbLoadTime.Name = "lbLoadTime";
+            this.lbLoadTime.Size = new System.Drawing.Size(0, 13);
+            this.lbLoadTime.TabIndex = 17;
+            // 
             // FormPemesanan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lbLoadTime);
             this.Controls.Add(this.LblStok);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -244,5 +254,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label LblStok;
+        private System.Windows.Forms.Label lbLoadTime;
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Data.SqlClient;
 
 namespace PABD_TokoKomputer
 {
@@ -15,8 +16,8 @@ namespace PABD_TokoKomputer
             string connectStr = "";
             try
             {
-                string localIP = GetLocalIPAddress(); // opsional, bisa dihapus kalau gak dipakai
-                connectStr = "Server=10.200.60.152,1433;Initial Catalog=SistemTokoComputerPABD_1;User ID=adminToko;Password=1234;";
+                 // mendeklarasikan ip address
+                connectStr = "Server=tcp:barbershoppabd.database.windows.net,1433;Initial Catalog=SistemTokoComputerPABD_1;Persist Security Info=False;User ID=LordAAI;Password=omkegamsomkegams;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
                 return connectStr;
             }
             catch (Exception ex)
@@ -24,21 +25,6 @@ namespace PABD_TokoKomputer
                 Console.WriteLine(ex.Message);
                 return string.Empty;
             }
-        }
-
-
-        public static string GetLocalIPAddress() // untuk mengambil IP Address pada PC yang menjalankan aplikasi
-        {
-            // mengambil informasi tentang local host
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork) // Mengambil IPv4
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Tidak ada alamat IP yang ditemukan.");
         }
     }
 }
