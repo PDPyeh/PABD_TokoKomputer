@@ -183,6 +183,11 @@ namespace UCP1PABD
                 string oldAlamat = selectedRow.Cells["Alamat"].Value.ToString();
                 string oldTelepon = selectedRow.Cells["NoTelepon"].Value.ToString();
 
+                if (string.IsNullOrWhiteSpace(txtAlamat.Text))
+                {
+                    MessageBox.Show("Alamat tidak boleh kosong!", "Validasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 // Cek apakah data berubah
                 if (txtNama.Text == oldNama && txtAlamat.Text == oldAlamat && txtNoTelepon.Text == oldTelepon)
                 {
