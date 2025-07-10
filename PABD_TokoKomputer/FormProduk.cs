@@ -130,8 +130,6 @@ namespace UCP1PABD
                     return;
                 }
 
-                
-
                 if (!IsStokValid(txtStok.Text))
                 {
                     MessageBox.Show("Stok harus berupa angka 0 atau lebih!");
@@ -149,7 +147,12 @@ namespace UCP1PABD
                         cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
                         cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
                         cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                        cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                        if (!decimal.TryParse(txtHarga.Text, out decimal harga) || harga <= 0)
+                        {
+                            MessageBox.Show("Harga tidak valid. Harus lebih dari 0.");
+                            return;
+                        }
+                        cmd.Parameters.AddWithValue("@harga", harga);
                         cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
 
                         cmd.ExecuteNonQuery();
@@ -298,7 +301,12 @@ namespace UCP1PABD
                             cmd.Parameters.AddWithValue("@nama", txtNamaProduk.Text);
                             cmd.Parameters.AddWithValue("@merk", txtMerk.Text);
                             cmd.Parameters.AddWithValue("@kategori", txtKategori.Text);
-                            cmd.Parameters.AddWithValue("@harga", decimal.Parse(txtHarga.Text));
+                            if (!decimal.TryParse(txtHarga.Text, out decimal harga) || harga <= 0)
+                            {
+                                MessageBox.Show("Harga tidak valid. Harus lebih dari 0.");
+                                return;
+                            }
+                            cmd.Parameters.AddWithValue("@harga", harga);
                             cmd.Parameters.AddWithValue("@stok", int.Parse(txtStok.Text));
 
                             cmd.ExecuteNonQuery();
@@ -354,13 +362,16 @@ namespace UCP1PABD
 
         private bool IsHargaValid(string input)
         {
-            return decimal.TryParse(input, out decimal value) && value >= 0;
+            return decimal.TryParse(input, out decimal value) && value > 0;
         }
 
 
         private bool IsStokValid(string input)
         {
-            return int.TryParse(input, out int stok) && stok >= 0;
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            return decimal.TryParse(input, out decimal value) && value > 0;
         }
 
         private void txtStok_TextChanged(object sender, EventArgs e)

@@ -17,7 +17,7 @@ namespace PABD_TokoKomputer
             try
             {
                  // mendeklarasikan ip address
-                connectStr = "Server=tcp:barbershoppabd.database.windows.net,1433;Initial Catalog=SistemTokoComputerPABD_1;Persist Security Info=False;User ID=LordAAI;Password=omkegamsomkegams;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
+                connectStr = "Server=tcp:barbershoppabd.database.windows.net,1433;Initial Catalog=SistemTokoComputerPABD_1;Persist Security Info=False;User ID=LordAAI;Password=omkegams;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
                 return connectStr;
             }
             catch (Exception ex)

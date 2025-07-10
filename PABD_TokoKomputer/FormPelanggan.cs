@@ -132,6 +132,12 @@ namespace UCP1PABD
                 // Mulai transaction di sisi client
                 SqlTransaction transaction = conn.BeginTransaction();
 
+                if (txtNama.Text == "" || txtAlamat.Text == "" || txtNoTelepon.Text == "")
+                {
+                    MessageBox.Show("Lengkapi semua input!");
+                    return;
+                }
+
                 try
                 {
                     SqlCommand cmd = new SqlCommand("sp_InsertPelanggan", conn, transaction);
@@ -357,12 +363,12 @@ namespace UCP1PABD
 
         private bool IsNamaValid(string nama)
         {
-            return !nama.Any(char.IsDigit); // true kalau tidak ada angka
+            return !string.IsNullOrWhiteSpace(nama) && nama.All(c => char.IsLetter(c) || char.IsWhiteSpace(c));
         }
 
         private bool IsNoTeleponValid(string no)
         {
-            no = no.Trim(); // hapus spasi depan-belakang
+            no = no.Trim();
             return !string.IsNullOrEmpty(no) && no.All(char.IsDigit) && no.Length >= 9 && no.Length <= 13;
         }
 
